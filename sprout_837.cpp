@@ -27,7 +27,7 @@ signed main()
         else if(a_r_x<0&&a_r_y==0)
             ka=(a_x)/(-1)*(a_r_x)+1;
         else if(a_r_x<0&&a_r_y<0)
-            ka=min((a_x)/a_r_x*(-1),(a_y)/a_r_y*(-1)+1;
+            ka=min((a_x)/a_r_x*(-1),(a_y)/a_r_y*(-1))+1;
         else if(a_r_x==0&&a_r_y!=0)
             ka=(n-a_y)/a_r_y+1;
         else if(a_r_y==0&&a_r_x!=0)
@@ -42,7 +42,7 @@ signed main()
         else if(b_r_x<0&&b_r_y==0)
             kb=(b_x)/(-1)*(b_r_x)+1;
         else if(b_r_x<0&&b_r_y<0)
-            kb=min((b_x)/b_r_x*(-1),(b_y)/b_r_y*(-1)+1;
+            kb=min((b_x)/b_r_x*(-1),(b_y)/b_r_y*(-1))+1;
         if(b_r_x==0&&b_r_y!=0)
             kb=(n-b_y)/b_r_y+1;
         else if(b_r_y==0&&b_r_x!=0)
