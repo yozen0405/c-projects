@@ -21,14 +21,13 @@ signed main()
             num[arr[l-1]]-=1;
             if(num[arr[l-1]]==0) break; 
         }
-        for(int i=1;i<11;i++) r_minus[i]=0;
+        for(int i=1;i<=c;i++) r_minus[i]=0;
         for(int r=n-1;r>=l;r--){
-            r_minus[arr[r]]++;
-            if(num[arr[r]]-r_minus[arr[r]]==0){
-                ans++;
-                break;
-            } 
-            else ans++;
+            if(r!=n-1){
+                r_minus[arr[r+1]]++;
+                if(num[arr[r+1]]-r_minus[arr[r+1]]==0) break;
+            }
+            ans++;
         }
     }
     cout<<ans;
