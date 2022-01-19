@@ -24,7 +24,7 @@ signed main()
         tmp1=1e9,tmp2=1e9;
         cin>>a_y>>a_x>>a_r_y>>a_r_x;
         if(a_r_x==0&&a_r_y==0)
-            ka=-1;
+            ka=1;
         else{
             if(a_r_x<0)
                 tmp1=(a_x-1)/(a_r_x*(-1))+1;
@@ -39,7 +39,7 @@ signed main()
         cin>>b_y>>b_x>>b_r_y>>b_r_x;
         tmp1=1e9,tmp2=1e9;
         if(b_r_x==0&&b_r_y==0)
-            kb=-2;
+            kb=1;
         else{
             if(b_r_x<0)
                 tmp1=(b_x-1)/(b_r_x*(-1))+1;
