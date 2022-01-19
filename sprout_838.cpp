@@ -19,19 +19,17 @@ signed main()
     for(int l=0;l<n;l++){
         if(l>0){
             num[arr[l-1]]-=1;
-            if(num[arr[l-1]]<=0) break; 
+            if(num[arr[l-1]]==0) break; 
         }
         for(int i=1;i<11;i++) r_minus[i]=0;
         for(int r=n-1;r>=l;r--){
             r_minus[arr[r]]++;
-            if(num[arr[r]]-r_minus[arr[r]]<=0){
+            if(num[arr[r]]-r_minus[arr[r]]==0){
                 ans++;
                 break;
             } 
             else ans++;
-            cout<<"r:"<<r<<"\n";
         }
-        cout<<"l:"<<l<<",ans:"<<ans<<"\n";
     }
     cout<<ans;
 }
