@@ -19,38 +19,38 @@ signed main()
     int x,y,r_x,r_y;
     int a_x,a_y,a_r_x,a_r_y;
     int b_x,b_y,b_r_x,b_r_y;
-    int ka,kb;
+    int ka,kb,tmp1,tmp2;
     while(q--){
+        tmp1=1e9,tmp2=1e9;
         cin>>a_y>>a_x>>a_r_y>>a_r_x;
-        if(a_r_x==0&&a_r_y<0)
-            ka=(a_y-1)/(a_r_y)*(-1)+1;
-        else if(a_r_x<0&&a_r_y==0)
-            ka=(a_x-1)/(-1)*(a_r_x)+1;
-        else if(a_r_x<0&&a_r_y<0)
-            ka=min((a_x-1)/a_r_x*(-1),(a_y-1)/a_r_y*(-1))+1;
-        else if(a_r_x==0&&a_r_y!=0)
-            ka=(n-a_y)/a_r_y+1;
-        else if(a_r_y==0&&a_r_x!=0)
-            ka=(m-a_x)/a_r_x+1;
-        else if(a_r_x==0&&a_r_y==0)
+        if(a_r_x==0&&a_r_y==0)
             ka=-1;
-        else
-            ka=min((m-a_x)/a_r_x,(n-a_y)/a_r_y)+1;
+        else{
+            if(a_r_x<0)
+                tmp1=(a_x-1)/(a_r_x*(-1))+1;
+            else if(a_r_x>0)
+                tmp1=(m-a_x)/a_r_x+1;
+            if(a_r_y<0)
+                tmp2=(a_y-1)/(a_r_y*(-1))+1;
+            else if(a_r_y>0)
+                tmp2=(n-a_y)/a_r_y+1;
+            ka=min(tmp1,tmp2);
+        }
         cin>>b_y>>b_x>>b_r_y>>b_r_x;
-        if(b_r_x==0&&b_r_y<0)
-            kb=(b_y-1)/(b_r_y)*(-1)+1;
-        else if(b_r_x<0&&b_r_y==0)
-            kb=(b_x-1)/(-1)*(b_r_x)+1;
-        else if(b_r_x<0&&b_r_y<0)
-            kb=min((b_x-1)/b_r_x*(-1),(b_y-1)/b_r_y*(-1))+1;
-        if(b_r_x==0&&b_r_y!=0)
-            kb=(n-b_y)/b_r_y+1;
-        else if(b_r_y==0&&b_r_x!=0)
-            kb=(m-b_x)/b_r_x+1;
-        else if(b_r_x==0&&b_r_y==0)
-            kb=-2;
-        else
-            kb=min((m-b_x)/b_r_x,(n-b_y)/b_r_y)+1;
+        tmp1=1e9,tmp2=1e9;
+        if(b_r_x==0&&b_r_y==0)
+            kb=-1;
+        else{
+            if(b_r_x<0)
+                tmp1=(b_x-1)/(b_r_x*(-1))+1;
+            else if(b_r_x>0)
+                tmp1=(m-b_x)/b_r_x+1;
+            if(b_r_y<0)
+                tmp2=(b_y-1)/(b_r_y*(-1))+1;
+            else if(b_r_y>0)
+                tmp2=(n-b_y)/b_r_y+1;
+            kb=min(tmp1,tmp2);
+        }
         if(ka==kb){
             for(int ax=a_x,ay=a_y,bx=b_x,by=b_y,k=0;k<ka;k++){
                 swap(a[ay-1][ax-1],b[by-1][bx-1]);
