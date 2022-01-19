@@ -60,14 +60,16 @@ signed main()
     }
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
-            cout<<a[i][j]<<" ";
+            cout<<a[i][j];
+            if(j!=(m-1)) cout<<" ";
         }
-        cout<<"\n";
+        if(i!=(n-1)) cout<<"\n";
     }
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
             cout<<b[i][j]<<" ";
+            if(j!=(m-1)) cout<<" ";
         }
-        cout<<"\n";
+        if(i!=(n-1)) cout<<"\n";
     }
 }
