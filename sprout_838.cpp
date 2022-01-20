@@ -19,6 +19,7 @@ signed main()
                     break;
                 }
             }
+            else num[arr[i]]++;
     }
     if(k!=c){
         cout<<0;
@@ -27,14 +28,17 @@ signed main()
     for(int l=0;l<n;l++){
         if(l>0){
             num[arr[l-1]]-=1; //扣掉之前左界包含數字的數量
-            while(r<n-1&&num[arr[l-1]]==0){ //增加右界找目前長度最小的範圍
+            if(num[arr[l-1]]==0) k--;
+            while(r<n-1&&k<c){ //增加右界找目前長度最小的範圍
                 r++;
+                if(num[arr[r]]==0) k++;
                 num[arr[r]]++; 
             }
             if(num[arr[l-1]]==0) //如果都找不到代表不用繼續了
                 break;
         }
         ans+=n-r; //(n-1)-r+1
+        //cout<<"ans:"<<ans<<"\n";
     }
-    cout<<ans;
+    cout<<ans<<"\n";
 }
