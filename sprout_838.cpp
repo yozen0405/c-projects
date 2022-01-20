@@ -11,15 +11,13 @@ signed main()
 	int k=0,r; 
     for(int i=0;i<n;i++) cin>>arr[i];
     for(int i=0;i<n;i++){
-            if(num[arr[i]]==0){
-                num[arr[i]]++;
-                k++;
+            if(num[arr[i]]==0)
+                k++；
+            num[arr[i]]++;
                 if(k==c){ //找到1~c最後出現至少一次的數字的index
                     r=i;
                     break;
                 }
-            }
-            else num[arr[i]]++;
     }
     if(k!=c){
         cout<<0;
