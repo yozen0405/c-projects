@@ -13,14 +13,13 @@ signed main()
     for(int i=0;i<n;i++){
         if(num[arr[i]]==0){
             k++;
-        num[arr[i]]++;
-        if(k==c){ //找到1~c最後出現至少一次的數字的index
-            r=i;
-            break;
+            num[arr[i]]++;
+            if(k==c){ //找到1~c最後出現至少一次的數字的index
+              r=i;
+              break;
+	    }
         }
 	else num[arr[i]]++;
-    }
-        else num[arr[i]]++;
     }
     if(k!=c){
         cout<<0<<"\n";
