@@ -68,8 +68,6 @@ void quali(string str){
             }
         }
     }
-    cout<<"----\n";
-    for(int i=0;i<position.size();i++) cout<<position[i].first<<","<<position[i].second<<"\n";
 }
 void race(){
     for(int i=0; i<position.size();i++){
@@ -90,7 +88,6 @@ void race(){
         tmp[i].second = position[i].second+sum;
         sum += position[i].second;
     }
-    cout<<"hi\n";
     int k=0;
     for(int i=0; i < driver[odd].size(); i++){
         srand( time(NULL) );
@@ -114,12 +111,6 @@ void race(){
             }
         }
     }
-
-    for(int i=0;i<tmp.size();i++) cout<<tmp[i].first<<","<<tmp[i].second<<"\n";
-    cout<<"----\n";
-    for(int i=0;i<race_position.size();i++) cout<<race_position[i]<<"\n";
-    cout<<"----\n";
-    for(int i=0;i<indent.size();i++) cout<<indent[i].first<<","<<indent[i].second<<"\n";
 
 }
 void point_system(){
@@ -172,8 +163,6 @@ void point_system(){
     for(int j=10; j<race_position.size();j++){
         point[j].first = race_position[j];
     }
-    cout<<"----\n";
-    for(int i=0;i<point.size();i++) cout<<point[i].first<<","<<point[i].second<<"\n";
 }
 void fastest_lap(){
     int sum = 0;
@@ -207,10 +196,6 @@ void fastest_lap(){
                 break;
             }
         }
-    cout<<"----\n";
-    for(int i=0;i<fastest_lap_odd.size();i++) cout<<fastest_lap_odd[i].first<<","<<fastest_lap_odd[i].second<<"\n";
-    cout<<"----\n";
-    for(int i=0;i<point.size();i++) cout<<point[i].first<<","<<point[i].second<<"\n";
 }
 void clear_all(){
     fastest_lap_odd.clear();
@@ -259,7 +244,5 @@ int main()
         print_driver_standing();
         times += 1;
         clear_all();
-        cout<<"--------------------------\n";
-        cout<<position.size()<<"\n";
     }
 }
