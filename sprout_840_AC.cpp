@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 #include <vector>
 #define int long long
-#define ll long long
 using namespace std;
 int n,k;
-vector<int> i;
+int i;
 vector<int> border;
 vector<int> border2;
 vector<int> number;
@@ -23,20 +22,20 @@ signed main()
     }
     border.push_back(0);
     border.push_back(1);
-    border2.push_back(0);
-    border2.push_back(1);
-    i.push_back(1);
+    i=1;
     if(k==0){
+        border2.push_back(0);
+        border2.push_back(1);
         while(border.back()<n){ //重複直到border>=n
             m*=10;//我現在在跑幾位數
-            i.push_back(i.back()+(m/10)*9*t);//現在我跑到的最初的index
+            i+=(m/10)*9*t;//現在我跑到的最初的index
             border.push_back(border.back()+9*t*(m/10));//我目前跑到的位數裡面最大k的數量
             border2.push_back((t+1)*m);
             t++;
         }
-         int t3=t;
+        int t3=t;
         int repeat=0;
-        int ind=i.back()+1,prev_ind,bor=border[border.size()-2],prev_bor,units=m,num=m,t2=1;//改變的是幾位數
+        int ind=i+1,prev_ind,bor=border[border.size()-2],prev_bor,units=m,t2=1;//改變的是幾位數
         while(units!=0){
             if(units==m) t2=1;
             else t2=0;
@@ -55,33 +54,26 @@ signed main()
             t--;
             bor=prev_bor;
             ind=prev_ind;
-            //cout<<bor<<","<<ind<<"\n";
             units/=10;
         }
         ind--;
-        //cout<<ind<<"\n";
         for(auto u:number){
             if(u==k) bor++;
             ind++;
             if(bor==n) break; 
         }
-        // for(auto u:number){
-        //     cout<<u; 
-        // }
-        // cout<<"\n";
         cout<<ind<<'\n';
     }
     else{
         while(border.back()<n){ //重複直到border>=n
-        m*=10;//我現在在跑幾位數
-        i.push_back(i.back()+(m/10)*9*t);//現在我跑到的最初的index
-        border.push_back(border.back()*10+m);//我目前跑到的位數裡面最大k的數量
-        border2.push_back(border.back()*10+m);//我目前跑到的位數裡面最大k的數量
-        t++;
+            m*=10;//我現在在跑幾位數
+            i+=(m/10)*9*t;//現在我跑到的最初的index
+            border.push_back(border.back()*10+m);//我目前跑到的位數裡面最大k的數量
+            t++;
         }
         int t3=t;
         int repeat=0;
-        int ind=i.back()+1,prev_ind,bor=border[border.size()-2],prev_bor,units=m,num=m,t2=1;//改變的是幾位數
+        int ind=i+1,prev_ind,bor=border[border.size()-2],prev_bor,units=m,t2=1;//改變的是幾位數
         while(units!=0){
             if(units==m) t2=1;
             else t2=0;
@@ -108,12 +100,8 @@ signed main()
             ind++;
             if(bor==n) break; 
         }
-        // for(auto u:number){
-        //     cout<<u; 
-        // }
-        // cout<<"\n";
         cout<<ind<<'\n';
-        }
+    }
 }
 
     
