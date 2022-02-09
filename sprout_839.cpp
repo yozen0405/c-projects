@@ -41,10 +41,8 @@ signed main()
             int max_x,min_x;
             if(p1_exist&&p2_exist){
                 if((p1.x+n1>=p2.x-n2&&p2.x>=p1.x)||(p2.x+n2>=p1.x-n1&&p1.x>=p2.x)){
-                    if(p1_exist&&p2_exist){
-                        max_x=max(p1.x+n1,p2.x+n2);
-                        min_x=min(p1.x-n1,p2.x-n2);
-                    }
+                    max_x=max(p1.x+n1,p2.x+n2);
+                    min_x=min(p1.x-n1,p2.x-n2);
                     if(max_x>n) max_x=n;
                     if(min_x<1) min_x=1;
                     ans+=max_x-min_x+1;
