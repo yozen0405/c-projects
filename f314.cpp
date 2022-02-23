@@ -9,10 +9,20 @@ signed main(){
         for(int j=1;j<=n;j++) cin>>arr[i][j];
     for(int i=1;i<=m;i++)
         for(int j=1;j<=n;j++){
-            int maxi=-1e9;
-            if(j!=1) maxi=max(dp[i][j-1]+arr[i][j],maxi);
-            if(j!=n) maxi=max(dp[i][j+1]+arr[i][j],maxi); 
-            if(i!=1) maxi=max(maxi,dp[i-1][j]+arr[i][j]);
+            if(i==1&&j!=1) dp[i][j]=max(arr[i][j],dp[i][j-1]+arr[i][j]);
+            else if(j==1&&i==1) dp[i][j]=arr[i][j];
+            else if(j==1) dp[i][j]=dp[i-1][j]+arr[i][j];
+            else dp[i][j]=max(dp[i][j-1],dp[i-1][j])+arr[i][j];
+            cout<<"i:"<<i<<",j:"<<j<<",ans:"<<dp[i][j]<<"\n";
         }
-    cout<<dp[m][n];
+    int maxi=-1e9;
+    for(int i=1;i<=m;i++)
+        for(int j=n;j>0;j--){
+            if(i==1) dp[i][j]=max(dp[i][j],dp[i][j+1]+arr[i][j]);
+            else if(j==n&&i!=1) dp[i][j]=max(dp[i][j],dp[i-1][j]+arr[i][j]);
+            else dp[i][j]=max({dp[i][j],dp[i][j+1]+arr[i][j],dp[i-1][j]+arr[i][j]});
+            
+            maxi=max(maxi,dp[i][j]);
+        }
+    cout<<maxi;
 }
