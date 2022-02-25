@@ -31,10 +31,10 @@ signed main(){
             int n1=stoll(s1),n2;
             if(i==1) previous_num=1;
             else{
-                s2=n.substr(i-2,i-1);
+                s2=n.substr(i-2,1);
                 n2=stoll(s2);
                 previous_num=n2;
-                if(s1<s2) break; //現在這項比前一項還小
+                if(n1<n2) break; //現在這項比前一項還小
 
             }
             if(i==ind) first=n1;
