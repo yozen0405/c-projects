@@ -3,7 +3,7 @@
 using namespace std;
 string n;
 int ans=0;
-int dp[20][12],arr[20],sum[20];//dp[長度][數字]
+int dp[20][12],arr[1000001],sum[20];//dp[長度][數字]
 const int mod = 1e9 + 7;
 signed main(){
     //建表
@@ -19,27 +19,24 @@ signed main(){
     while(cin>>n){
         ans=0;
         int ind;
-        for(int i=1;i<=n.size();i++){
-            string s=n.substr(i-1,i);
-            arr[n.size()-i+1]=stoll(s);
-            cout<<n.size()-i+1<<","<<arr[n.size()-i+1]<<"\n";
-        }
         ind=n.size();
         //cout<<"ind:"<<ind<<"\n";
         for(int len=1;len<ind;len++){
             ans+=sum[len];
             ans%=mod;
         }
-        for(int i=ind;i>0;i--){ //從高位數讀到低位數
+        for(int i=1;i<=ind;i++){ //從高位數讀到低位數
             int first,previous_num;
-            if(i==ind) previous_num=1;
+            string s1=n.substr(i-1,i),s2=n.substr(i-2,i-1);
+            int n1=stoll(s1),n2=stoll(s2);
+            if(i==1) previous_num=1;
             else{
-                previous_num=arr[i+1];
-                if(arr[i]<arr[i+1]) break;
+                previous_num=n2;
+                if(s1<s2) break; //現在這項比前一項還小
 
             }
-            if(i==1) first=arr[i];
-            else first=arr[i]-1;
+            if(i==ind) first=n1;
+            else first=n1-1;
             for(int j=first;j>=previous_num;j--){
                 ans+=dp[i][j];
                 ans%=mod;
