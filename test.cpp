@@ -31,5 +31,5 @@ signed main(){
     for(int i=0;i<n;i++){
         if(cnt[i]>cnt[mx]) mx=i;
     }
-    cout<<cnt[mx]<<"\n";
+    cout<<cnt[mx]-1<<"\n";
 }
