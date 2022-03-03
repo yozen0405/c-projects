@@ -5,7 +5,7 @@ int n,ans=0;
 vector<int> G[1000000];
 int cnt[1000000],hei[1000000],is_root[1000000];
 void dfs(int u,int p){
-    cnt[p]=cnt[u]+1;
+    cnt[u]=cnt[p]+1;
     for(auto v:G[u]){
         if(v==p) continue;
         dfs(v, u);
