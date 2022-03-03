@@ -1,49 +1,35 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-string n;
-int ans=0;
-int dp[1000001][12],arr[1000001],sum[1000001];//dp[長度][數字]
-const int mod = 1e9 + 7;
+int n,ans=0;
+vector<int> G[1000000];
+int cnt[1000000],hei[1000000],is_root[1000000];
+void dfs(int u,int p){
+    cnt[p]=cnt[u]+1;
+    for(auto v:G[u]){
+        if(v==p) continue;
+        dfs(v, u);
+    }
+}
 signed main(){
-    //建表
-    dp[1][10]=1;
-    for(int len=1;len<1000001;len++){
-        for(int num=9;num>=1;num--){
-            dp[len][num]=dp[len-1][num]+dp[len][num+1];
-            sum[len]+=dp[len][num];
-            //cout<<"dp"<<"("<<len<<","<<num<<"): "<<dp[len][num]<<"\n";
-        }
-        
+    cin>>n;
+    int u,v;
+    for(int i=1;i<=n-1;i++){
+        cin>>u>>v;
+        G[u].push_back(v);
+        G[v].push_back(u);
     }
-    while(cin>>n){
-        ans=0;
-        int ind;
-        ind=n.size();
-        //cout<<"ind:"<<ind<<"\n";
-        for(int len=1;len<ind;len++){
-            ans+=sum[len];
-            ans%=mod;
-        }
-        for(int i=1;i<=ind;i++){ //從高位數讀到低位數
-            int first,previous_num;
-            string s1=n.substr(i-1,1),s2;
-            int n1=stoll(s1),n2;
-            if(i==1) previous_num=1;
-            else{
-                s2=n.substr(i-2,1);
-                n2=stoll(s2);
-                previous_num=n2;
-                if(n1<n2) break; //現在這項比前一項還小
-
-            }
-            if(i==ind) first=n1;
-            else first=n1-1;
-            for(int j=first;j>=previous_num;j--){
-                ans+=dp[i][j];
-                ans%=mod;
-            }
-        }
-        cout<<ans%mod<<"\n";
+    dfs(0, 0);
+    int mx=0;
+    for(int i=0;i<n;i++){
+        if(cnt[i]>cnt[mx]) mx=i;
     }
+    for(int i=0;i<n;i++){
+        cnt[i]=0;
+    }
+    dfs(mx, mx);
+    for(int i=0;i<n;i++){
+        if(cnt[i]>cnt[mx]) mx=i;
+    }
+    cout<<cnt[mx]<<"\n";
 }
