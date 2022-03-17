@@ -17,9 +17,10 @@ signed main(){
             if(!mp[arr[r]]) cnt++;
             mp[arr[r]]++;
             r++;
-            cout<<"r:"<<r<<",cnt:"<<cnt<<"\n";
+            //cout<<"r:"<<r<<",cnt:"<<cnt<<"\n";
         }
-        cout<<l<<","<<r<<"\n";
+        if(cnt>k) r--;
+       // cout<<l<<","<<r<<"\n";
         ans+=r-l;
         l++;
     }
