@@ -1,38 +1,32 @@
-#include <bits/stdc++.h>
+#include <iostream>
 #define int long long
 using namespace std;
+long long pow(long long a, long long n, long long M) {
+    long long ans = 1;
+    while (n > 0) {
+        if (n & 1){
+            ans = ans * a % M;
+            cout<<n<<endl;
+         }
+        a = a * a % M;
+        n >>= 1;
+        cout<<"n:"<<n<<endl;
+    }
+    return ans % M;
+}
 int n,k,ans;
 int arr[1000000];
-map<int,int> mp;
 signed main(){
-    cin>>n>>k;
-    for(int i=0;i<n;i++){
-        cin>>arr[i];
+    int a=2^5;
+    cout<<a<<endl;
+    for(int k=1;k<50;k++)
+        for(int j=1;j<50;j++){
+            for(int i=1;i<50;i++){
+            a=k^j^i;
+            if(a==i+j+k)
+                cout<<"i:"<<i<<", "<<"j:"<<j<<", "<<"k:"<<k<<","<<a<<endl;
+        }
     }
-    int l=0,r=-1,cnt=0;
-    while(l!=n){
-        cout<<"mp[arr[l-1]]:"<<mp[arr[l-1]]<<",arr:"<<arr[l-1]<<endl;
-        if(l!=0&&mp[arr[l-1]]){
-            if(mp[arr[l-1]]==1)
-              cnt--;
-            mp[arr[l-1]]--;
-        }
-        cout<<"r:"<<r<<",cnt:"<<cnt<<",mp[arr[r]]"<<mp[arr[r]]<<"\n";
-        while(cnt<=k&&r<n-1){
-            r++;
-            if(!mp[arr[r]]) cnt++;
-            mp[arr[r]]++;
-         cout<<"r:"<<r<<",cnt:"<<cnt<<",mp[arr[r]]"<<mp[arr[r]]<<"\n";
-        }
-        if(cnt>k){
-            mp[arr[r]]--;
-            r--;
-            cnt--;
-        }
         
-       cout<<l<<","<<r<<",cnt:"<<cnt<<"\n";
-        ans+=r-l+1;
-        l++;
-    }
-    cout<<ans;
 }
+    
