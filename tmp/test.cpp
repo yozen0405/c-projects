@@ -1,32 +1,23 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #define int long long
 using namespace std;
-long long pow(long long a, long long n, long long M) {
-    long long ans = 1;
-    while (n > 0) {
-        if (n & 1){
-            ans = ans * a % M;
-            cout<<n<<endl;
-         }
-        a = a * a % M;
-        n >>= 1;
-        cout<<"n:"<<n<<endl;
-    }
-    return ans % M;
-}
-int n,k,ans;
-int arr[1000000];
+int n,m;
+struct node{
+    string s=""; 
+    node *next=nullptr;
+}arr[1000001];
 signed main(){
-    int a=2^5;
-    cout<<a<<endl;
-    for(int k=1;k<50;k++)
-        for(int j=1;j<50;j++){
-            for(int i=1;i<50;i++){
-            a=k^j^i;
-            if(a==i+j+k)
-                cout<<"i:"<<i<<", "<<"j:"<<j<<", "<<"k:"<<k<<","<<a<<endl;
-        }
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cin>>n;
+    for(int i=1;i<=n;i++){
+        cin>>arr[i].s;
     }
-        
-}
+    int u,v;
+    for(int i=1;i<=n-1;i++){
+        cin>>u>>v;
+        arr[u].s+=arr[v].s;
+        arr[v].s.clear();
+        if(i==n-1) cout<<arr[u].s;
+    }
     
