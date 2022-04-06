@@ -1,34 +1,31 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-int t,n;
-int cmp(pair<int,int> a,pair<int,int> b){
-    if(a.first==b.first) return a.second<b.second;
-    return a.first>a.first;
-}
+int n,m,k,s,arr[1000000];
+int dis[100001][305];
+vector<int> G[1000000];
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0);
-    cin>>t;
-    while(t--){
-        cin>>n;
-        vector<pair<int,int>> vec(n);
-        vector<int> cnt(n);
-        int l,r;
-        for(int i=0;i<n;i++){
-            cin>>vec[i].first>>vec[i].second;
+    cin>>n>>m>>k>>s;
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }    
+    int u,v;
+    for(int i=0;i<m;i++){
+        cin>>u>>v;
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    for(int i=1;i<=k;i++){
+        vector<int> vis(n);
+        queue<int> q;
+        for(int j=0;j<n;j++){
+            if(arr[i]==k) vis[i]=1;
+            q.push(i);
         }
-        sort(vec.begin(),vec.end(),cmp);
-        int mx=-1e9;
-        for(int i=0;i<n;i++){
-            for(int j=i+1;j<n;j++){
-                if(vec[i].second>=vec[j].first){
-                    cnt[i]++;cnt[j]++;
-                }
-            }
-            mx=max(mx,cnt[i]);
-        }
-        cout<<n-(mx+1)<<"\n";
+        while(!q.empty()){
 
+        }
     }
 }
