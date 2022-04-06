@@ -1,0 +1,33 @@
+//https://codeforces.com/problemset/problem/1462/F
+#include <bits/stdc++.h>
+#define int long long
+using namespace std;
+int t,n;
+signed main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cin>>t;
+    while(t--){
+        cin>>n;
+        vector<pair<int,int>> vec(n);
+        vector<int> l(n);
+        vector<int> r(n);
+        for(int i=0;i<n;i++){
+            cin>>vec[i].first>>vec[i].second;
+            l[i]=vec[i].first;
+            r[i]=vec[i].second;
+        }
+        sort(l.begin(),l.end());
+        sort(r.begin(),r.end());
+        int ans=2e9,total=0,pos;
+        for(int i=0;i<n;i++){
+            total=0;
+            pos=upper_bound(l.begin(),l.end(),vec[i].second)-l.begin();
+            total+=n-pos+1;
+            pos=lower_bound(r.begin(),r.end(),vec[i].first)-r.begin();
+            total+=pos-1;
+            ans=min(ans,total);
+        }
+        cout<<ans<<"\n";
+    }
+}
