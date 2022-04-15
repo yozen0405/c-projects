@@ -1,25 +1,32 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-int L,N,arr[10000],dp[10000][10000];
-int rec(int l, int r){
-    cout<<l<<r<<'\n';
-    if(r-l==1) return 0;
-    for(int k=l+1;k<r;k++){
-        dp[l][r]=min(rec(l,k)+rec(k,r)+arr[r]-arr[l],dp[l][r]);
-    }
-    return dp[l][r];
-}
+int h,w;
+char arr[3000][3000];
+int dp[3000][3000][3];
+const int mod=1e9+7;
 signed main(){
-    for(int i=0;i<3;i++){
-        cin>>L>>N;
-        arr[0]=0;
-        for(int j=1;j<=N;j++){
-            cin>>arr[i];
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cin>>h>>w;
+    for(int i=1;i<=w;i++){
+        for(int j=1;j<=h;j++){
+            cin>>arr[i][j];
         }
-        arr[N+1]=L;
-        for(int j=0;j<5000;j++)
-            for(int k=0;k<5000;k++) dp[j][k]=1e9;
-        cout<<rec(0,N+1)<<'\n';
     }
+    dp[1][1][0]=dp[1][1][1]=dp[1][1][2]=1;
+    for(int i=1;i<=w;i++){
+        for(int j=1;j<=h;j++){
+            if(arr[i][j]=='.'){
+                if(i!=1||j!=1){
+                    dp[i][j][0]=(dp[i][j-1][0]+dp[i][j-1][1]+dp[i][j-1][2]+dp[i][j-1][0])%mod;
+                    dp[i][j][1]=(dp[i-1][j][0]+dp[i-1][j][1]+dp[i-1][j][2]+dp[i-1][j][1])%mod;
+                    dp[i][j][2]=(dp[i-1][j-1][0]+dp[i-1][j-1][1]+dp[i-1][j-1][2]+dp[i-1][j-1][2])%mod;
+                    //cout<<"i:"<<i<<",j:"<<j<<'\n';
+                    //cout<<dp[i][j][0]<<","<<dp[i][j][1]<<","<<dp[i][j][2]<<"\n";
+                }
+            }
+        }
+    }
+    cout<<dp[w][h-1][0]+dp[w-1][h-1][2]+dp[w-1][h][1];
 }
