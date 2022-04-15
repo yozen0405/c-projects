@@ -1,38 +1,25 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-int n,m;
+int L,N,arr[10000],dp[10000][10000];
+int rec(int l, int r){
+    cout<<l<<r<<'\n';
+    if(r-l==1) return 0;
+    for(int k=l+1;k<r;k++){
+        dp[l][r]=min(rec(l,k)+rec(k,r)+arr[r]-arr[l],dp[l][r]);
+    }
+    return dp[l][r];
+}
 signed main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cin>>n>>m;
-    int a,tot=0;
-    vector<int> pref(n+1);
-    for(int i=1;i<=n;i++){
-      cin>>a;
-      pref[i]=pref[i-1]+a;
-      tot=pref[i];
+    for(int i=0;i<3;i++){
+        cin>>L>>N;
+        arr[0]=0;
+        for(int j=1;j<=N;j++){
+            cin>>arr[i];
+        }
+        arr[N+1]=L;
+        for(int j=0;j<5000;j++)
+            for(int k=0;k<5000;k++) dp[j][k]=1e9;
+        cout<<rec(0,N+1)<<'\n';
     }
-    int p;
-    auto pos=pref.begin()+1;
-    auto prev_pos=pref.begin();
-    while(m--){
-      cin>>p;
-      p%=tot;
-      prev_pos=pos;
-      pos=lower_bound(pref.begin(),pref.end(),*(pos-1)+p);
-      if(pos==pref.end()){
-        if(pos==pref.end()) pos-=1;
-        p-=*(pos-1)-*(prev_pos-1);
-        pos=pref.begin()+1;
-        if(p>0){
-          pos=lower_bound(pref.begin(),pref.end(),p)+1;
-        } 
-      }
-      else{
-        pos+=1;
-      }
-      cout<<pos-pref.begin()-1<<"\n";
-    }
-    
 }
