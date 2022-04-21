@@ -1,32 +1,46 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-int h,w;
-char arr[3000][3000];
-int dp[3000][3000][3];
-const int mod=1e9+7;
+int n,a[100000],b[100000],sum,times,mi,dp[2000][14000];
+const int INF=0x3f3f3f3f;
 signed main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cin>>h>>w;
-    for(int i=1;i<=w;i++){
-        for(int j=1;j<=h;j++){
-            cin>>arr[i][j];
-        }
-    }
-    dp[1][1][0]=dp[1][1][1]=dp[1][1][2]=1;
-    for(int i=1;i<=w;i++){
-        for(int j=1;j<=h;j++){
-            if(arr[i][j]=='.'){
-                if(i!=1||j!=1){
-                    dp[i][j][0]=(dp[i][j-1][0]+dp[i][j-1][1]+dp[i][j-1][2]+dp[i][j-1][0])%mod;
-                    dp[i][j][1]=(dp[i-1][j][0]+dp[i-1][j][1]+dp[i-1][j][2]+dp[i-1][j][1])%mod;
-                    dp[i][j][2]=(dp[i-1][j-1][0]+dp[i-1][j-1][1]+dp[i-1][j-1][2]+dp[i-1][j-1][2])%mod;
-                    //cout<<"i:"<<i<<",j:"<<j<<'\n';
-                    //cout<<dp[i][j][0]<<","<<dp[i][j][1]<<","<<dp[i][j][2]<<"\n";
-                }
+    while(cin>>n){
+        times=1e9;
+        mi=1e9;
+        sum=0;
+        for(int i=0;i<2000;i++)
+            for(int j=1;j<14000;j++) dp[i][j]=INF; 
+        for(int i=1;i<=n;i++){
+            cin>>a[i]>>b[i];
+            sum+=a[i]+b[i];
+            for(int j=1*i;j<=13*i;j++){
+                if(j-a[i]>=0) dp[i][j]=dp[i-1][j-a[i]];
+                if(j-b[i]>=0) dp[i][j]=min(dp[i-1][j],dp[i-1][j-b[i]]+1);
             }
         }
+        cout<<"y\n";
+        int ii,jj;
+        for(int j=1*n;j<=13*n;j++){
+            if(dp[n][j]<INF){
+                if(abs(sum-j-j)<mi){
+                    mi=abs(sum-j-j);
+                    times=dp[n][j];
+                    ii=n;
+                    jj=j;
+                    cout<<sum<<","<<ii<<","<<jj<<","<<mi<<","<<times<<"\n";
+                }
+                else if(abs(sum-j-j)==mi){
+                    if(times>dp[n][j]){
+                        times=dp[n][j];
+                        ii=n;
+                        jj=j;
+                        cout<<sum<<","<<ii<<","<<jj<<","<<mi<<","<<times<<"\n";
+                    }
+                }
+            }
+                
+        }
+        cout<<dp[n][37]<<"\n";
+        
     }
-    cout<<dp[w][h-1][0]+dp[w-1][h-1][2]+dp[w-1][h][1];
 }
