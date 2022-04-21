@@ -9,7 +9,8 @@ signed main(){
         mi=1e9;
         sum=0;
         for(int i=0;i<2000;i++)
-            for(int j=1;j<14000;j++) dp[i][j]=INF; 
+            for(int j=0;j<14000;j++) dp[i][j]=INF; 
+        dp[0][0]=0;
         for(int i=1;i<=n;i++){
             cin>>a[i]>>b[i];
             sum+=a[i]+b[i];
@@ -39,8 +40,8 @@ signed main(){
                 }
             }
                 
-        }
-        cout<<dp[n][37]<<"\n";
+        }   
+        cout<<dp[2][18]<<"\n";
         
     }
 }
