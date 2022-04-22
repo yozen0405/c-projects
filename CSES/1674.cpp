@@ -4,11 +4,11 @@ using namespace std;
 int n,ans=0,cnt[1000000];
 vector<int> G[1000000];
 void dfs(int u){
-    cnt[u]=G[u].size();
     for(auto v:G[u]){
         dfs(v);
         cnt[u]+=cnt[v];
     }
+    cnt[u]+=1;
 }
 signed main(){
     cin>>n;
@@ -19,7 +19,7 @@ signed main(){
     }
     dfs(1);
     for(int i=1;i<=n;i++){
-        cout<<cnt[i];
+        cout<<cnt[i]-1;
         if(i!=n) cout<<" ";
     }
 }
