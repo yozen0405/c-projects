@@ -1,3 +1,4 @@
+//memory limit: 512MB, time limit: 1.00s
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
