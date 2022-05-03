@@ -1,47 +1,32 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-int n,a[100000],b[100000],sum,times,mi,dp[2000][14000];
-const int INF=0x3f3f3f3f;
+int n,k,ans,t;
 signed main(){
-    while(cin>>n){
-        times=1e9;
-        mi=1e9;
-        sum=0;
-        for(int i=0;i<2000;i++)
-            for(int j=0;j<14000;j++) dp[i][j]=INF; 
-        dp[0][0]=0;
-        for(int i=1;i<=n;i++){
-            cin>>a[i]>>b[i];
-            sum+=a[i]+b[i];
-            for(int j=1*i;j<=13*i;j++){
-                if(j-a[i]>=0) dp[i][j]=dp[i-1][j-a[i]];
-                if(j-b[i]>=0) dp[i][j]=min(dp[i-1][j],dp[i-1][j-b[i]]+1);
-            }
-        }
-        cout<<"y\n";
-        int ii,jj;
-        for(int j=1*n;j<=13*n;j++){
-            if(dp[n][j]<INF){
-                if(abs(sum-j-j)<mi){
-                    mi=abs(sum-j-j);
-                    times=dp[n][j];
-                    ii=n;
-                    jj=j;
-                    cout<<sum<<","<<ii<<","<<jj<<","<<mi<<","<<times<<"\n";
-                }
-                else if(abs(sum-j-j)==mi){
-                    if(times>dp[n][j]){
-                        times=dp[n][j];
-                        ii=n;
-                        jj=j;
-                        cout<<sum<<","<<ii<<","<<jj<<","<<mi<<","<<times<<"\n";
-                    }
-                }
-            }
-                
-        }   
-        cout<<dp[2][18]<<"\n";
-        
-    }
+	cin>>t;
+	while(t--){
+		cin>>n;
+		vector<int> v(n);
+		map<int,int> mp;
+		bool flag=0;
+		for(int i=0;i<n;i++){
+			cin>>v[i];
+			mp[v[i]]++;
+			if(mp[v[i]]>n/2){
+				flag=1;
+				break;
+			}
+		}
+		if(flag){
+			cout<<"-1\n";
+			continue;
+		}
+		mp.clear();
+		for(int k=1;k<=2e6;k++){
+			for(int i=0;i<n;i++){
+				int mod=
+			}
+			
+		}
+	}
 }
