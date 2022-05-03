@@ -1,37 +1,39 @@
 #include <bits/stdc++.h>
-
 #define int long long
 using namespace std;
-int arr[100000];
-int n,k;
-void cal(int l,int r){
-    if(l==r){
-        cout<<arr[l];return;
-    } 
-    swap(arr[l],arr[r]);
-    int i=l-1;
-    for(int j=l;i<=r;j++){
-        if(j==r){
-            i++;
-            swap(arr[i],arr[r]);
-            break;
-        }
-        if(arr[j]<arr[r]){
-            i++;
-            swap(arr[i],arr[j]);
-        }
-    }
-    if(i==k-1){
-        cout<<arr[i];return;
-    }
-    if(i>k-1){
-        cal(l,i-1);
-    }
-    else cal(i+1,r);
-}
+int n,k,ans;
+map<vector<pair<int,int>>,int> mp;
+int prime[1000000],c[1000000];
 signed main(){
-    cin>>n>>k;
-    for(int i=0;i<n;i++) cin>>arr[i];
-    cal(0,n-1);
+	cin>>n>>k;
+	int x;
+	for(int i=0;i<n;i++){
+		cin>>x;
+		int now=0;
+		for(int j=2;j*j<=x;j++){
+			if(x%j==0){
+				prime[now]=j;
+				do{
+					x/=j;
+					c[now]++;
+				}while(x%j==0);
+				c[now]%=k;
+				if(c[now]==0) now--;
+				now++;
+			}
+		}
+		if(x>1){
+			prime[now]=x;
+			c[now]=1;
+			now++;
+		}
+		vector<pair<int,int>> v1;
+		vector<pair<int,int>> v2;
+		for(int j=0;j<now;j++){
+			v1.push_back({prime[j],c[j]});
+			v2.push_back({prime[j],k-c[j]});
+		}
+		ans+=mp[v2];
+		mp[v1]++;
+	}
 }
-    
