@@ -17,4 +17,3 @@ for(int i=2;i<=n;i++){
         ans[i]*=(ct+1);
     }
 }
-d
