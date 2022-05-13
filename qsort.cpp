@@ -1,39 +1,90 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-int n,k,ans;
-map<vector<pair<int,int>>,int> mp;
-int prime[1000000],c[1000000];
-signed main(){
-	cin>>n>>k;
-	int x;
-	for(int i=0;i<n;i++){
-		cin>>x;
-		int now=0;
-		for(int j=2;j*j<=x;j++){
-			if(x%j==0){
-				prime[now]=j;
-				do{
-					x/=j;
-					c[now]++;
-				}while(x%j==0);
-				c[now]%=k;
-				if(c[now]==0) now--;
-				now++;
-			}
-		}
-		if(x>1){
-			prime[now]=x;
-			c[now]=1;
-			now++;
-		}
-		vector<pair<int,int>> v1;
-		vector<pair<int,int>> v2;
-		for(int j=0;j<now;j++){
-			v1.push_back({prime[j],c[j]});
-			v2.push_back({prime[j],k-c[j]});
-		}
-		ans+=mp[v2];
-		mp[v1]++;
-	}
+
+const int maxn=2e5+5;
+const int INF=0x3f3f3f3f;
+int n,q;
+int a[maxn];
+int seg[4*maxn];
+
+void build(int u,int l,int r){
+    //cout<<"ho\n";   
+    if(l==r){
+        seg[u]=a[l];
+        return;
+    }
+    int mid=(l+r)/2;
+    int lc=2*u,rc=2*u+1;
+    
+    build(lc,l,mid);
+    build(rc,mid+1,r);
+    seg[u]=max(seg[lc],seg[rc]);
 }
+int query(int u,int l,int r,int qL,int qR){
+    if(r < qL || qR < l) return INF;  
+    if(qL<=l && r<=qR){
+        return seg[u];
+    }
+    int mid=(l+r)/2;
+    int lc=2*u,rc=2*u+1;
+    return max(query(lc,l,mid,qL,qR),query(rc,mid+1,r,qL,qR));
+}
+int find(int u,int l,int r,int x){
+    if(l==r){
+        return r;
+    }
+    int mid=(l+r)/2;
+    int lc=2*u,rc=2*u+1;
+    if(seg[lc]>=x){
+        return find(lc,l,mid,x);
+    }
+    else{
+        return find(rc,mid+1,r,x);
+    }   
+}
+void modify(int u,int l,int r,int pos,int val){
+    if(l==r){
+        seg[pos]=val;
+        return;
+    }
+    int mid=(l+r)/2;
+    int lc=2*u,rc=r*u+1;
+    if(pos<=mid){
+        modify(lc,l,mid,pos,val);
+    }
+    else{
+        modify(rc,mid+1,r,pos,val);
+    }
+    seg[pos]=max(seg[lc],seg[rc]);
+}
+
+signed main(){
+    // ios::sync_with_stdio(0);
+    // cin.tie(0);
+    cin>>n>>q;
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
+    } 
+    int k;
+    build(1,1,n);
+    while(q--){
+        cin>>k;
+        int ret=find(1,1,n,k);
+        int qur=query(1,1,n,ret,ret);
+        if(qur>=k){
+            cout<<qur<<","<<ret<<"\n";
+            modify(1,1,n,ret,qur-k);
+        }
+        else{
+            cout<<"0 ";
+        }
+    }
+}
+/*
+8 1
+3 2 4 1 5 5 2 6
+9
+
+
+*/
