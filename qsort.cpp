@@ -29,10 +29,10 @@ int query(int u,int l,int r,int qL,int qR){
     int mid=(l+r)/2;
     int lc=2*u,rc=2*u+1;
     return max(query(lc,l,mid,qL,qR),query(rc,mid+1,r,qL,qR));
-}
-int find(int u,int l,int r,int x){
+}                                                               
+pair<int,int> find(int u,int l,int r,int x){
     if(l==r){
-        return r;
+        return {r,seg[u]};
     }
     int mid=(l+r)/2;
     int lc=2*u,rc=2*u+1;
@@ -45,7 +45,7 @@ int find(int u,int l,int r,int x){
 }
 void modify(int u,int l,int r,int pos,int val){
     if(l==r){
-        seg[pos]=val;
+        seg[u]=val;
         return;
     }
     int mid=(l+r)/2;
@@ -56,7 +56,7 @@ void modify(int u,int l,int r,int pos,int val){
     else{
         modify(rc,mid+1,r,pos,val);
     }
-    seg[pos]=max(seg[lc],seg[rc]);
+    seg[u]=max(seg[lc],seg[rc]);
 }
 
 signed main(){
@@ -70,11 +70,10 @@ signed main(){
     build(1,1,n);
     while(q--){
         cin>>k;
-        int ret=find(1,1,n,k);
-        int qur=query(1,1,n,ret,ret);
-        if(qur>=k){
-            cout<<qur<<","<<ret<<"\n";
-            modify(1,1,n,ret,qur-k);
+        auto ret=find(1,1,n,k);
+        if(ret.second>=k){
+            cout<<ret.first<<" ";
+            modify(1,1,n,ret.first,ret.second-k);
         }
         else{
             cout<<"0 ";
