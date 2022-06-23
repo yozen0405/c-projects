@@ -1,74 +1,118 @@
 #include <bits/stdc++.h>
-#define int long long
+
 using namespace std;
 
-const int MAXN=20;
+string ltrim(const string &);
+string rtrim(const string &);
+vector<string> split(const string &);
 
-struct TwoSAT{
-    static const int MAXv = 2*MAXN;
-    vector<int> GO[MAXv],BK[MAXv],stk;
-    int vis[MAXv];
-    int SC[MAXv];
-    void imply(int u,int v){ // u imply v
-        GO[u].push_back(v);
-        BK[v].push_back(u);
-    }
-    void dfs(int u,vector<int>*G,int sc){
-        vis[u]=1, SC[u]=sc;
-        for (int v:G[u])
-            if (!vis[v])
-                dfs(v,G,sc);
-        if (G==GO)stk.push_back(u);
-    }
-    void scc(int n){
-        memset(vis,0,sizeof(vis));
-        for (int i=0; i<n; i++)if (!vis[i])
-            dfs(i,GO,-1);
-        memset(vis,0,sizeof(vis));
-        int sc=0;
-        while (!stk.empty()){
-            if (!vis[stk.back()])
-                dfs(stk.back(),BK,sc++);
-            stk.pop_back();
-        }
-    }
-};
+/*
+ * Complete the 'equal' function below.
+ *
+ * The function is expected to return an INTEGER.
+ * The function accepts INTEGER_ARRAY arr as parameter.
+ */
 
+const int maxn=1e3+5;
+int dp[maxn];
 
-signed main(){
-    int t;
-    cin>>t;
-    while(t--){
-        int n,m;
-        cin>>n>>m;
-        string s1="",s2="";
-        TwoSAT SAT;
-        for(int i=0;i<m;i++){
-            cin>>s1;
-            cin>>s2;
-            //+ 2*i m 0
-            //- 2*i+1 h 1
-            int p1=((s1[0]=='m') ? 1:0),p2=((s2[0]=='m') ? 1:0);
-            int num1=s1[1]-'1',num2=s2[1]-'1';
-            //cout<<s1<<","<<s2<<","<<num1<<","<<num2<<"\n";
-            SAT.imply(num1*2+p1,num2*2+!p2);
-            SAT.imply(num2*2+p2,num1*2+!p1);
-        }
-        SAT.scc(2*n);
-        bool flg=0;
-        for(int i=0;i<n;i++){
-            if(SAT.SC[2*i]==SAT.SC[2*i+1]) flg=1;
-            //cout<<SAT.SC[2*i]<<","<<SAT.SC[2*i+1]<<"\n";
-        }
-        if(flg) cout<<"BAD\n";
-        else cout<<"GOOD\n";
+void table(){
+    for(int i=1;i<=maxn;i++){
+        dp[i]=dp[i-1]+1;
+        if(i>=2) dp[i]=min(dp[i],dp[i-2]+1);
+        if(i>=5) dp[i]=min(dp[i],dp[i-5]+1);
     }
 }
 
-/*
-2 4
-h1 m2
-m2 m1
-h1 h2
-m1 h2
-*/
+int equal(vector<int> arr) {
+    int n=arr.size();
+    int mi=0x3f3f3f3f,ret=0;
+    for(int val=0;val<1000;val++){
+        for(int i=0;i<n;i++){
+            ret+=dp[arr[i]-val];
+            if(arr[i]-val<0) return mi;
+        }
+        mi=min(ret,mi);
+        ret=0;
+    }
+    return mi;
+}
+
+int main()
+{
+    ofstream fout(getenv("OUTPUT_PATH"));
+
+    string t_temp;
+    getline(cin, t_temp);
+
+    int t = stoi(ltrim(rtrim(t_temp)));
+    
+    table();
+    
+    for (int t_itr = 0; t_itr < t; t_itr++) {
+        string n_temp;
+        getline(cin, n_temp);
+
+        int n = stoi(ltrim(rtrim(n_temp)));
+
+        string arr_temp_temp;
+        getline(cin, arr_temp_temp);
+
+        vector<string> arr_temp = split(rtrim(arr_temp_temp));
+
+        vector<int> arr(n);
+
+        for (int i = 0; i < n; i++) {
+            int arr_item = stoi(arr_temp[i]);
+
+            arr[i] = arr_item;
+        }
+
+        int result = equal(arr);
+
+        fout << result << "\n";
+    }
+
+    fout.close();
+
+    return 0;
+}
+
+string ltrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        s.begin(),
+        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
+    );
+
+    return s;
+}
+
+string rtrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
+        s.end()
+    );
+
+    return s;
+}
+
+vector<string> split(const string &str) {
+    vector<string> tokens;
+
+    string::size_type start = 0;
+    string::size_type end = 0;
+
+    while ((end = str.find(" ", start)) != string::npos) {
+        tokens.push_back(str.substr(start, end - start));
+
+        start = end + 1;
+    }
+
+    tokens.push_back(str.substr(start));
+
+    return tokens;
+}
