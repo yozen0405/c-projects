@@ -5,9 +5,11 @@ using namespace std;
 const int INF = 0x3f3f3f3f;
 const int maxn = 2e5+5;
 
-int maxProfit(int d, vector<int>& prices) {
-    const int INF=0x3f3f3f3f;
-    int n=prices.size();
+signed main(){
+    int n,d;
+    cin>>n>>d;
+    vector<int> prices(n);
+    for(int i=0;i<n;i++) cin>>prices[i];
     if(2*d>n) d=n>>1;
     d*=2;
     vector<vector<int>> dp(d+1,vector<int>(n+1));
@@ -23,12 +25,5 @@ int maxProfit(int d, vector<int>& prices) {
             ans=max(ans,dp[k][i]);
         }
     }
-    return ans;
-}
-signed main(){
-    int n,k;
-    cin>>n>>k;
-    vector<int> a(n);
-    for(int i=0;i<n;i++) cin>>a[i];
-    cout<<maxProfit(k,a);
+    cout<<ans;
 }
