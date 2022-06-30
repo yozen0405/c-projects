@@ -36,6 +36,8 @@ signed main(){
     for(int i=1;i<=n;i++) cin>>a[i];
     //dp[i]在i放基地台的答案
     //轉移: dp[i]=a[i]+min(dp[i-2k-1]...dp[i-1])
+    //但是這樣會O(nk) TLE
+    //所以用線段數RMQ來優化變O(k*log n)
     for(int i=1;i<=k+1;i++){
         //前面放了也是多餘的，因為自己的都會把範圍全部涵蓋
         modify(1,1,n,i,a[i]);
