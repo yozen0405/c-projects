@@ -1,29 +1,26 @@
-#include <bits/stdc++.h>
-#define int long long
-using namespace std;
-
-const int INF = 0x3f3f3f3f;
-const int maxn = 2e5+5;
-
-signed main(){
-    int n,d;
-    cin>>n>>d;
-    vector<int> prices(n);
-    for(int i=0;i<n;i++) cin>>prices[i];
-    if(2*d>n) d=n>>1;
-    d*=2;
-    vector<vector<int>> dp(d+1,vector<int>(n+1));
-    vector<vector<int>> mx(d+1,vector<int>(n+1,-INF));
-    for(int i=0;i<=n;i++) mx[0][i]=0;
-    int ans=0;
-    for(int k=1;k<=d;k++){
-        for(int i=1;i<=n;i++){
-            dp[k][i]=-INF;
-            if(k>i) continue;
-            dp[k][i]=max(dp[k][i],mx[k-1][i-1]+((k&1) ? -1:1)*prices[i-1]);
-            mx[k][i]=max(mx[k][i-1],dp[k][i]); //k~i
-            ans=max(ans,dp[k][i]);
+#define lowbit(x) x & (-x)
+class Solution {
+public:
+    bool canPartitionKSubsets(vector<int>& a, int k) {
+        int n = a.size();
+        int tar=0;
+        for(auto ele:a) tar+=ele;
+        if(tar%k) return 0;
+        tar/=k;
+        vector<int> sum(1<<n);
+        for(int U=1;U<(1<<n);U++){
+            sum[U]=sum[U-lowbit(U)]+a[log2(lowbit(U))];
         }
+        vector<int> dp(1<<n);
+        dp[0]=true;
+        for(int U=0;U<(1<<n);U++){
+            for(int S=U;S>=0;S=(S-1)&U){
+                if(S==tar&&dp[U^S]){
+                    dp[U]=true;
+                    break;
+                }
+            }
+        }
+        return dp[(1<<n)-1];
     }
-    cout<<ans;
-}
+};
