@@ -16,7 +16,6 @@ public:
             dp[0]=true;
             for(int U=1;U<(1<<n);U++){
                 for(int S=U;S>0;S=(S-1)&U){
-                    //cout<<S<<"\n";
                     if(sum[S]==tar&&dp[U^S]){
                         dp[U]=true;
                         break;
