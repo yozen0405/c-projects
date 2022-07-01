@@ -14,6 +14,9 @@ struct node{
 
 int cmp(node a,node b){
     return a.w+a.s<b.w+b.s;
+    //greedy
+    //s1-w2<s2-w1 (代表第1個東西還能放的重量比第2個東西還多)
+    //因為等等要做背包問題，我另新的要疊在下面，阿疊在下面的能放的重量一定要比較大，所以先從小的到大的
 }
 
 signed main(){
@@ -26,10 +29,12 @@ signed main(){
     sort(a.begin()+1,a.end(),cmp);
     mx=a.back().w+a.back().s;
     vector<vector<int>> dp(n+1,vector<int>(mx+1,-INF));
+    //dp[i][j] 看前 i 個物品，整個重量為 j 的最大 value
+    //dp[i][j]=max(dp[i-1][j],dp[i-1][j-a[i].w]+a[i].v); i 疊在之前的那疊 (j-a[i].w) 的最下面
     dp[0][0]=0;
     for(int i=1;i<=n;i++){
         for(int j=a[i].s+a[i].w;j>=0;j--){
-            if(j<a[i].w) dp[i][j]=dp[i-1][j];
+            if(j<a[i].w) dp[i][j]=dp[i-1][j]; 
             if(j<a[i].w) continue;
             dp[i][j]=max(dp[i-1][j],dp[i-1][j-a[i].w]+a[i].v);
         }
