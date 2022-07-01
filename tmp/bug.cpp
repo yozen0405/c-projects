@@ -13,7 +13,7 @@ public:
         }
         vector<int> dp(1<<n);
         dp[0]=true;
-        for(int U=0;U<(1<<n);U++){
+        for(int U=1;U<(1<<n);U++){
             for(int S=U;S>=0;S=(S-1)&U){
                 if(S==tar&&dp[U^S]){
                     dp[U]=true;
