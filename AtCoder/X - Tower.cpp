@@ -36,6 +36,8 @@ signed main(){
         for(int j=a[i].s+a[i].w;j>=0;j--){
             if(j<a[i].w) dp[i][j]=dp[i-1][j]; 
             if(j<a[i].w) continue;
+            //真正有可能可以把第 i 個疊在目前最下面的只有在目前 s[i] 還沒被消耗完的時候
+            // j-a[i].w 最大只有可能是 a[i].s , 成功做到下面的 s[i] 要達於等於上面的重量總和
             dp[i][j]=max(dp[i-1][j],dp[i-1][j-a[i].w]+a[i].v);
         }
     }
