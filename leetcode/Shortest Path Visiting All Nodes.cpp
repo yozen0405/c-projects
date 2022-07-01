@@ -13,6 +13,7 @@ public:
                 d[i][u]=1;
             }
         }
+        //floyd-warshall
         for(int k=0;k<n;k++){
             for(int i=0;i<n;i++){
                 for(int j=0;j<n;j++){
@@ -25,6 +26,8 @@ public:
         }
         vector<vector<int>> dp(n,vector<int>(1<<n));
         int ans=INF;
+        //TSP
+        //dp[u][S] 最後一個停在u,走過了集合S這些點
         for(int mask=0;mask<(1<<n);mask++){
             vector<int> b;
             for(int i=0;i<maxn;i++){
@@ -39,7 +42,6 @@ public:
                     dp[v][mask]=min(dp[v][mask],dp[u][mask^(1<<v)]+d[v][u]);
                     if(mask==(1<<n)-1) ans=min(ans,dp[v][mask]);
                 }
-                //cout<<b[i]<<","<<mask<<","<<dp[b[i]][mask]<<"\n";
             }
         }
         if(ans==INF) return 0;
