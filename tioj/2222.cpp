@@ -7,9 +7,7 @@ const int maxn = 5005;
 int n, W, K;
 
 signed main(){
-    /*
-    講師 k 人，代表總重量 W 最多只能是 W/k ， 價值是大家一起變 k 倍，所以出來再乘 k 就好
-    */
+    // 講師 k 人，代表總重量 W 最多只能是 W/k ， 價值是大家一起變 k 倍，所以出來再乘 k 就好
     cin >> n >> W >> K;
     vector<int> w(n+1);
     vector<int> v(n+1);
