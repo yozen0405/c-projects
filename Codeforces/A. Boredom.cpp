@@ -14,6 +14,10 @@ signed main(){
     cin >> n;
     int num;
     int mx = 0;
+    /*
+    可以把問題想成給你一個從左到右為 1 到 n 的陣列 a , 和一個陣列 cnt, cnt[i] 代表 i 這個數字的權重是多少
+    相鄰的不能同時選, 選了 i 這個數字可以得到 i*cnt[i] 的價值, 請問最大價值是多少
+    */
     for (int i = 0; i < n; i++) {
         cin >> num;
         mp[num]++;
