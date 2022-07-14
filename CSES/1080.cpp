@@ -36,5 +36,5 @@ signed main () {
             }
         }
     }
-	cout << dp[0][n - 1] << '\n';
+    cout << dp[0][n - 1] << '\n';
 }
