@@ -49,6 +49,12 @@ int solve(vector<int>& tp) {
 }
 
 signed main() {
+    /*
+    要先看某幾頁才能看該頁, 這個相當於一個 graph, 如果要先看 v 才能看 i
+    那在圖上就是 v -> i, 如果 v > i, 代表在看完 v 後沒辦法繼續看 i, 要等到下一輪
+    v -> i 的邊權就設為 1, 否則邊權就設為 0, 最後因為要考慮 "所有" 的頁數都要看完, 
+    所以答案就是 DAG 的 longest path (因為要考慮要最多天才能看完的頁數)
+    */
     int t;
     cin >> t;
     while (t--) {
@@ -62,6 +68,7 @@ signed main() {
             cin >> m;
             while (m--) {
                 cin >> v;
+                //先看 v 才能看 i
                 G[v].pb(make_pair(i, (i < v)));
                 in[i]++;
             }
