@@ -27,12 +27,12 @@ signed main () {
             int r = l + len - 1;
             for (int k = l + 1; k <= r; k += 2) {
                 if (s[l] == s[k]) {
-					int sum = dp[l + 1][k - 1] * dp[k + 1][r];
+                    int sum = dp[l + 1][k - 1] * dp[k + 1][r];
                     sum %= M;
-					sum = sum * C[(r - l + 1) / 2][(k - l + 1) / 2];
+                    sum = sum * C[(r - l + 1) / 2][(k - l + 1) / 2];
                     sum %= M;
-					dp[l][r] = (dp[l][r] + sum + M) % M;
-				}
+                    dp[l][r] = (dp[l][r] + sum + M) % M;
+                }
             }
         }
     }
