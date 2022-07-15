@@ -23,8 +23,8 @@ void dfs(int u = 1, int par = 0) {
 pii fnd(int a, int b) {
     pii ret = mk(0, 0); //dep(a) > dep(b)
     int dif = dep[a] - dep[b];
-    ret.first = dif;
-    ret.second = dif;
+    ret.first = dif; // 紀錄 a 到 LCA 的距離
+    ret.second = dif; //紀錄 b 到 a 的距離
     for (int i = 0; i < 19; i++) {
         if (dif & (1 << i)) {
             a = p[a][i];
@@ -35,7 +35,7 @@ pii fnd(int a, int b) {
         if (p[a][i] != p[b][i]) {
             a = p[a][i];
             b = p[b][i];
-            ret.second += 2 * (1 << i);
+            ret.second += 2 * (1 << i); 
             ret.first += (1 << i); 
         }
     }
@@ -46,7 +46,7 @@ pii fnd(int a, int b) {
 
 int solve(int a, int b, pii dis, int k) {
     int cur = k;
-    if (k > dis.first) cur = dis.first;
+    if (k > dis.first) cur = dis.first; // 太大的話先走到 LCA
     k -= dis.first;
     for (int i = 0; i < 19; i++) {
         if (cur & (1 << i)) {
@@ -54,7 +54,7 @@ int solve(int a, int b, pii dis, int k) {
         }
     }
     if (k > 0) {
-        cur = (dis.second - dis.first) - k;
+        cur = (dis.second - dis.first) - k; // 維持出發點一定要深度比較低的原則，更換出發點也要更新走的部數
         for (int i = 0; i < 19; i++) {
             if (cur & (1 << i)) {
                 b = p[b][i];
@@ -82,19 +82,19 @@ signed main () {
     while (q--) {
         int a, b, k, flg = 0;
         cin >> a >> b >> k;
-        if (dep[b] > dep[a]) {
+        if (dep[b] > dep[a]) { // 維持出發點一定要深度比較低的原則
             swap(a, b);
             flg = 1;
         }
-        pii ret = fnd(a,b);
-        if (k > ret.second){
+        pii ret = fnd(a,b); // 找 a 到 LCA 的距離與 b 到 a 的距離
+        if (k > ret.second){ // 超過 b 到 a 的距離直接輸出 -1
             cout << -1 << '\n';
             continue;
         }
         if (flg) {
-            k = ret.second - k;
+            k = ret.second - k; // 因為剛剛把 a, b 對調，出發點改變，所以走的部數會改變
         }
-        cout << solve(a, b, ret, k) << "\n";
+        cout << solve(a, b, ret, k) << "\n"; //計算答案
     }
 
 }
