@@ -4,70 +4,83 @@
 #define pii pair<int,int>
 using namespace std;
 
-const int maxn = 1e5 + 5;
+const int maxn = 100010;
+const int INF = 0x3f3f3f3f;
 int n, q;
 int a[maxn];
 
 struct seg {
 	seg *lch, *rch;
-	int val;
+	int add, ans, flg;
 	seg () {
 		lch = rch = nullptr;
-		val = 0;
+		ans = add = flg = 0;
 	}
-	void pull () {
-		val = lch -> val + rch -> val;
-	}
-	void build (int l, int r) {
-		if (l == r) {
-			val = a[l];
-			return;
+	void push(int l, int r) {
+		if (add) {
+			lch -> add += add;
+			rch -> add += add;
+			lch -> ans += add;
+			rch -> ans += add;
+			if(!flg) ans += add;
+			add = 0;
+			flg = 0;
 		}
-		int mid = (l + r) >> 1;
-		if(!lch) lch = new seg();
-		if(!rch) rch = new seg();
-		lch -> build (l, mid);
-		rch -> build (mid + 1, r);
-		pull();
 	}
 	void modify(int l, int r, int mL, int mR, int v) {
 		if (mL <= l && r <= mR) {
-			val = v;
+			add += v;
+			ans += v;
+			flg = 1;
 			return;
 		}
 		int mid = (l + r) >> 1;
+		int ret = INF;
 		if(!lch) lch = new seg();
 		if(!rch) rch = new seg();
-		if(mL <= mid && lch) lch -> modify(l, mid, mL, mR, v);
-		if(mid + 1 <= mR && rch) rch -> modify(mid + 1, r, mL, mR, v);
-		pull();
+		push(l, r);
+		if(mL <= mid && lch){
+			lch -> modify(l, mid, mL, mR, v);
+		} 
+		if(mid + 1 <= mR && rch){
+			rch -> modify(mid + 1, r, mL, mR, v);
+		} 
+		ans = ret = min (lch -> ans, rch -> ans);
 	}
-	int find (int l, int r, int cur) {
-		if (l == r) {
-			return l;
+	int query(int l, int r, int qL, int qR) {
+		if (qL <= l && r <= qR) {
+			return ans;
 		}
 		int mid = (l + r) >> 1;
-		if(lch && cur <= lch -> val) return lch -> find(l, mid, cur);
-		else if (rch && lch && cur > lch -> val) return rch -> find(mid + 1, r, cur - lch -> val); 
+		int ret = INF;
+		if(!lch) lch = new seg();
+		if(!rch) rch = new seg();
+		push(l, r);
+		if(qL <= mid && lch) {
+			ret = min(ret, lch -> query(l, mid, qL, qR));
+		} 
+		if(mid + 1 <= qR && rch) {
+			ret = min(rch -> query(mid + 1, r, qL, qR), ret);
+		} 
+		return ret;
 	}
 };
 
 signed main () {
 	cin >> n >> q;
-	for (int i = 1; i <= n; i++) {
-		cin >> a[i];
-	} 
 	seg* rt = new seg();
-	rt -> build(1, n);
-	int op, idx;
+	int op, l, r, x;
 	while (q--) {
-		cin >> op >> idx;
-		idx++;
+		cin >> op;
 		if (op == 1) {
-			rt -> modify(1, n, idx, idx, !a[idx]);
+			cin >> l >> r >> x;
+			l++;
+			rt -> modify(1, n, l, r, x);
 		}
 		else {
-			cout << rt -> find(1, n, idx) - 1 << "\n";
+			cin >> l >> r;
+			l++;
+			cout << rt -> query(1, n, l, r) << "\n";
 		}
 	}
 }
