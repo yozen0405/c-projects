@@ -22,7 +22,6 @@ struct seg {
 			rch -> add += add;
 			lch -> ans += add;
 			rch -> ans += add;
-			if(!flg) ans += add;
 			add = 0;
 			flg = 0;
 		}
@@ -31,7 +30,6 @@ struct seg {
 		if (mL <= l && r <= mR) {
 			add += v;
 			ans += v;
-			flg = 1;
 			return;
 		}
 		int mid = (l + r) >> 1;
