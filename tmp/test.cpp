@@ -1,60 +1,73 @@
 #include <bits/stdc++.h>
 #define int long long
-#define pb push_back
+#define mk make_pair
+#define pii pair<int,int>
 using namespace std;
 
-const int INF = 0x3f3f3f3f;
-const int M = 1e9 + 7;
-const int maxn = 2e5 + 5;
-int n, m, k = 4;
-vector<int> G[maxn];
-int color[maxn];
+const int maxn = 1e5 + 5;
+int n, q;
+int a[maxn];
 
-int colorPaint() {
-    for (int i = 1; i <= n; i++) color[i] = 1;
-    vector<int> vis(n + 1, 0);
-    int mx = 1;
-    for (int i = 1; i <= n; i++) {
-        if (vis[i]) continue;
-        vis[i] = 1;
-        queue<int> q;
-        q.push(i);
-
-        while (q.size()) {
-            int u = q.front();
-            q.pop();
-            for (auto v : G[u]) {
-                if (color[v] == color[u]) {
-                    color[v]++;
-                }
-                mx = max(mx, color[v]);
-                if (mx > k) return 0;
-                if (!vis[i]) {
-                    vis[i] = 1;
-                    q.push(v);
-                }
-            }
-        }
-    }
-    return 1;
-}
+struct seg {
+	seg *lch, *rch;
+	int val;
+	seg () {
+		lch = rch = nullptr;
+		val = 0;
+	}
+	void pull () {
+		val = lch -> val + rch -> val;
+	}
+	void build (int l, int r) {
+		if (l == r) {
+			val = a[l];
+			return;
+		}
+		int mid = (l + r) >> 1;
+		if(!lch) lch = new seg();
+		if(!rch) rch = new seg();
+		lch -> build (l, mid);
+		rch -> build (mid + 1, r);
+		pull();
+	}
+	void modify(int l, int r, int mL, int mR, int v) {
+		if (mL <= l && r <= mR) {
+			val = v;
+			return;
+		}
+		int mid = (l + r) >> 1;
+		if(!lch) lch = new seg();
+		if(!rch) rch = new seg();
+		if(mL <= mid && lch) lch -> modify(l, mid, mL, mR, v);
+		if(mid + 1 <= mR && rch) rch -> modify(mid + 1, r, mL, mR, v);
+		pull();
+	}
+	int find (int l, int r, int cur) {
+		if (l == r) {
+			return l;
+		}
+		int mid = (l + r) >> 1;
+		if(lch && cur <= lch -> val) return lch -> find(l, mid, cur);
+		else if (rch && lch && cur > lch -> val) return rch -> find(mid + 1, r, cur - lch -> val); 
+	}
+};
 
 signed main () {
-    cin >> n >> m;
-    for (int i = 0, u, v; i < m; i++) {
-        cin >> u >> v;
-        G[u].pb(v);
-        G[v].pb(u);
-    }
-    cout << colorPaint();
+	cin >> n >> q;
+	for (int i = 1; i <= n; i++) {
+		cin >> a[i];
+	} 
+	seg* rt = new seg();
+	rt -> build(1, n);
+	int op, idx;
+	while (q--) {
+		cin >> op >> idx;
+		idx++;
+		if (op == 1) {
+			rt -> modify(1, n, idx, idx, !a[idx]);
+		}
+		else {
+			cout << rt -> find(1, n, idx) - 1 << "\n";
+		}
+	}
 }
-
-/*
-4 5
-1 2
-2 3
-3 4
-4 2
-1 4
-true
-*/
