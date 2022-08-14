@@ -8,6 +8,9 @@
 using namespace std;
 using P = pair<long long,long long>;
  
+int n;
+vector<P> p;
+
 P operator+ (P a, P b) {
     return {a.x + b.x, a.y + b.y};
 }
@@ -49,20 +52,63 @@ bool insert (P a, P b, P c, P d) {
     return false;
 }
  
-void solve() {
-    int n;
-    cin >> n;
-    vector<P> p(n);
-    for (int i = 0; i < n; i++) cin >> p[i].x >> p[i].y;
+int area(vector<P> &a) {
     int ret = 0 ;
-    P a = mk(0, 0);
-    for (int i = 1; i < n; i++) {
-        ret += cross(p[i - 1] - a, p[i] - a);
+    for (int i = 1; i < a.size(); i++) {
+        ret += cross(a[i - 1], a[i]);
     }
-    ret += cross(p[n - 1] - a, p[0] - a);
-    cout << abs(ret);
+    ret += cross(a[a.size()- 1], a[0]);
+    return abs(ret);
+}
+
+vector<P> convex () {
+    sort(p.begin(), p.end(), [](P a, P b){ if(a.x == b.x) return a.y > b.y; return a.x < b.x; });
+    vector<int> stk(n);
+    vector<int> use(n);
+    int tp = 0;
+    stk[tp++] = 0;
+    for (int i = 1; i < n; i++) {
+        while (tp >= 2 && sign(cross(p[stk[tp - 1]] - p[stk[tp - 2]], p[i] - p[stk[tp - 1]])) < 0) {
+            use[stk[tp - 1]] = 0;
+            tp--;
+        }
+        use[i] = 1;
+        stk[tp++] = i;
+    }
+    for (int i = n - 2; i >= 0; i--) {
+        if(!use[i]) {
+            while (tp >= 2 && sign(cross(p[stk[tp - 1]] - p[stk[tp - 2]], p[i] - p[stk[tp - 1]])) < 0) {
+                use[stk[tp - 1]] = 0;
+                tp--;
+            }
+            use[i] = 1;
+            stk[tp++] = i;
+        }
+    }
+    vector<P> h;
+    for (int i = 0; i < tp; i++) {
+        h.pb(p[stk[i]]);
+    }
+    return h;
+}
+
+void init() {
+	cin >> n;
+    p.resize(n);
+    for (int i = 0; i < n; i++) cin >> p[i].x >> p[i].y;
+}
+
+void solve() {
+	int cnt = 0;
+	for (int i = 1; i < n; i++) {
+		cnt += __gcd(abs(p[i].x - p[i - 1].x),abs(p[i].y - p[i - 1].y));
+	}
+	// https://i.imgur.com/vhmXuf5.png
+	cnt += __gcd(abs(p[n - 1].x - p[0].x),abs(p[n - 1].y - p[0].y));
+	cout << (area(p) - cnt + 2) / 2 << " " << cnt << "\n";
 }
  
 signed main () {
-    solve();
+	init();
+	solve();
 }
