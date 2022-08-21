@@ -1,84 +1,48 @@
 #include <bits/stdc++.h>
 #define int long long
+#define pii pair<int, int>
 #define mk make_pair
-#define pii pair<int,int>
+#define pb push_back
 using namespace std;
 
-const int maxn = 100010;
-const int INF = 0x3f3f3f3f;
-int n, q;
-int a[maxn];
-
-struct seg {
-	seg *lch, *rch;
-	int add, ans, flg;
-	seg () {
-		lch = rch = nullptr;
-		ans = add = flg = 0;
-	}
-	void push(int l, int r) {
-		if (add) {
-			lch -> add += add;
-			rch -> add += add;
-			lch -> ans += add;
-			rch -> ans += add;
-			add = 0;
-			flg = 0;
-		}
-	}
-	void modify(int l, int r, int mL, int mR, int v) {
-		if (mL <= l && r <= mR) {
-			add += v;
-			ans += v;
-			return;
-		}
-		int mid = (l + r) >> 1;
-		int ret = INF;
-		if(!lch) lch = new seg();
-		if(!rch) rch = new seg();
-		push(l, r);
-		if(mL <= mid && lch){
-			lch -> modify(l, mid, mL, mR, v);
-		} 
-		if(mid + 1 <= mR && rch){
-			rch -> modify(mid + 1, r, mL, mR, v);
-		} 
-		ans = ret = min (lch -> ans, rch -> ans);
-	}
-	int query(int l, int r, int qL, int qR) {
-		if (qL <= l && r <= qR) {
-			return ans;
-		}
-		int mid = (l + r) >> 1;
-		int ret = INF;
-		if(!lch) lch = new seg();
-		if(!rch) rch = new seg();
-		push(l, r);
-		if(qL <= mid && lch) {
-			ret = min(ret, lch -> query(l, mid, qL, qR));
-		} 
-		if(mid + 1 <= qR && rch) {
-			ret = min(rch -> query(mid + 1, r, qL, qR), ret);
-		} 
-		return ret;
-	}
+const int maxn = 3e3 + 5;
+const long long mod = 1e9 + 7;
+int n, K;
+struct node {
+    int x, y, a;
 };
 
+// get f(x) = ax + b
+int get (pii p, int x) {
+    return p.first * x + p.second;
+}
+
+int check (pii p, pii p1, pii p2) {
+    return (p.second - p1.second) * (p2.first - p.first) <= (p.second - p2.second) * (p1.first - p.first);
+    // (b - b1) * (a2 - a) <= (b - b2) * (a1 - a)
+}
+
 signed main () {
-	cin >> n >> q;
-	seg* rt = new seg();
-	int op, l, r, x;
-	while (q--) {
-		cin >> op;
-		if (op == 1) {
-			cin >> l >> r >> x;
-			l++;
-			rt -> modify(1, n, l, r, x);
-		}
-		else {
-			cin >> l >> r;
-			l++;
-			cout << rt -> query(1, n, l, r) << "\n";
-		}
-	}
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cin >> n;
+    vector<node> p(n);
+    for (int i = 0; i < n; i++) {
+        cin >> p[i].x >> p[i].y >> p[i].a;
+    }
+    sort (p.begin(), p.end(), [](node a, node b) { if (a.x == b.x) return a.y > b.y; return a.x < b.x;});
+    vector<pii> Q(n + 1);
+    int head = 0, tail = 0, ans = 0;
+    for (int i = 0; i < n; i++) {
+        while (tail - head >= 2 && get(Q[head],-p[i].y) <= get(Q[head + 1],-p[i].y)) {
+            head++;
+        }
+        pii cur = {p[i].x, get(Q[head], -p[i].y) + p[i].x * p[i].y - p[i].a};
+        while (tail - head >= 2 && check(cur, Q[tail - 1], Q[tail - 2])) {
+            tail--;
+        }
+        Q[tail++] = cur;
+        ans = max(Q[tail - 1].second, ans);
+    }
+    cout << ans;
 }
