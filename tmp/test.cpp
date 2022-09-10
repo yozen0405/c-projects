@@ -1,48 +1,61 @@
 #include <bits/stdc++.h>
 #define int long long
 #define pii pair<int, int>
-#define mk make_pair
 #define pb push_back
+#define IO ios::sync_with_stdio(0);cin.tie(0);
 using namespace std;
 
-const int maxn = 3e3 + 5;
-const long long mod = 1e9 + 7;
-int n, K;
-struct node {
-    int x, y, a;
-};
+const int maxn = 1e6 + 5;
+int Q[maxn];
 
-// get f(x) = ax + b
-int get (pii p, int x) {
-    return p.first * x + p.second;
+int gen (vector<int>& a, int len, int hei) {
+	int n = a.size(), cnt = 0, ct = 0;
+	set<pii> st;
+	int head = 0, tail = 0;
+	for (int i = 0; i < n; i++) {
+		// 0 1 2 3 4
+		// 1 3 2 4 1
+		while (head - tail && Q[head] <= i - len) head++;
+		while (head - tail && a[Q[tail - 1]] >= a[i]) tail--;
+		int mn = min(a[Q[head]], a[i]);
+		if (head - tail == 0) mn = a[i];
+		Q[tail++] = i;
+		if (i >= len - 1) {
+			if (mn >= hei) {
+				cnt += (mn - hei + 1);
+				//cout << "i:" << i <<  ",mn:" << mn << ",cnt:" << mn - hei + 1 << "\n";
+			}
+		}
+	}
+	return cnt;
 }
+/*
+5 4
+1 3 2 4 1
 
-int check (pii p, pii p1, pii p2) {
-    return (p.second - p1.second) * (p2.first - p.first) <= (p.second - p2.second) * (p1.first - p.first);
-    // (b - b1) * (a2 - a) <= (b - b2) * (a1 - a)
-}
+8 8
+3 4 3 3 5 6 3 1
+*/
+
+void solve () {
+	int n, area;
+	vector<int> a;
+	cin >> n >> area;
+	for (int i = 0, u; i < n; i++) {
+		cin >> u;
+		a.pb(u);
+	}
+	int res = 0;
+	for (int i = 1; i * i <= area; i++) {
+		if (area % i == 0) {
+			res += gen(a, i, area / i);
+			if (area / i != i) res += gen(a, area / i, i);
+		}
+	}
+	cout << res << "\n";
+} 
 
 signed main () {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cin >> n;
-    vector<node> p(n);
-    for (int i = 0; i < n; i++) {
-        cin >> p[i].x >> p[i].y >> p[i].a;
-    }
-    sort (p.begin(), p.end(), [](node a, node b) { if (a.x == b.x) return a.y > b.y; return a.x < b.x;});
-    vector<pii> Q(n + 1);
-    int head = 0, tail = 0, ans = 0;
-    for (int i = 0; i < n; i++) {
-        while (tail - head >= 2 && get(Q[head],-p[i].y) <= get(Q[head + 1],-p[i].y)) {
-            head++;
-        }
-        pii cur = {p[i].x, get(Q[head], -p[i].y) + p[i].x * p[i].y - p[i].a};
-        while (tail - head >= 2 && check(cur, Q[tail - 1], Q[tail - 2])) {
-            tail--;
-        }
-        Q[tail++] = cur;
-        ans = max(Q[tail - 1].second, ans);
-    }
-    cout << ans;
+	IO
+	solve();
 }
