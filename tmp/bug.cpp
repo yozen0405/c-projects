@@ -1,75 +1,70 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
+#define int long long
+#define pb push_back
+#define mk make_pair
+#define pii pair<int, int>
 using namespace std;
- 
-const int maxn = 5005;
- 
-int n, m, a, b, ans, p[maxn], cnt[maxn], in[maxn];
-vector <int> G[maxn], v[maxn];
-queue <int> q;
- 
-int pa(int x){
-    if (p[x] < 0) return x;
-    else return p[x] = pa(p[x]);
+
+int L, R, n;
+
+int cnt (int start, int num) {
+    return (start + start + 2 * (num - 1)) * num / 2;
 }
- 
-int main() {
-    cin >> n >> m;
-    for (int i = 0; i < m; i++){
-        cin >> a >> b;
-        G[a].push_back(b);
-        G[b].push_back(a);
-        cnt[a]++;
-        cnt[b]++;
-    }
-	// topo 排序
-    for (int i = 1; i <= n; i++){
-		// in_deg == i 的
-        for (int j = 1; j <= n; j++){
-            if (cnt[j] == i){
-                q.push(j);
-                in[j] = 1; // 紀錄是否已經在 vector 裡面
-            }
+
+void solve() {  
+    cin >> L >> R;
+    bool flg = 0;
+    if (R > L) {
+        flg = 1;
+        swap(L, R);
+    } 
+    int xl = 0, xr = 2e9 + 5;
+    while (xl < xr - 1) { // L >= R
+        int m = (xl + xr) >> 1;
+        if (L - m * (m + 1) / 2 < R) {
+            xr = m;
         }
-        while (!q.empty()){
-            int now = q.front();
-            q.pop();
-            v[i].push_back(now);
-			// 拔點 (now)
-            for (auto v:G[now]){
-                cnt[v]--;
-                if (in[v]) continue;
-                if (cnt[v] <= i){
-                    q.push(v);
-                    in[v] = 1;
-                }
-            }
+        else {
+            xl = m;
         }
     }
-    for (int i = n; i >= 1; i--){
-		cout << "in: " << i << "\n";
-        for (auto v:v[i]){
-			// 至少有 i 個邊連到比自己 in_deg 大於等於的 node
-			cout << v << " ";
-            p[v] = -1;
-            for (auto k : G[v]){
-                if (!p[k]) continue; 
-				// 如果 in_deg 比自己低的就不跑
-                int x = pa(v), y = pa(k);
-                if (x != y){
-                    if (x > y) swap(x, y);
-                    p[x] += p[y];        
-                    p[y] = x;        
-                }  
-            }
+    int ans1 = xl;
+    L -= xl * (xl + 1) / 2;
+    int lb = 0, rb = 2e9 + 5;
+    if (L == R) flg = 0;
+    while (lb < rb - 1) {
+        int m = (lb + rb) >> 1;
+        // 幾輪
+        if (L - cnt(xl + 1, m) < 0) {
+            rb = m;
         }
-		if(v[i].size()) cout << "\n";
-        for (int j = 1; j <= n; j++){
-            if (p[j] < 0) ans = max(ans, -p[j]*i);
-			// p[i] 看他的區塊有多少個點
-			// p[j] -> Di, i -> |S|
+        else { // L - cnt >= 0
+            lb = m;
         }
     }
-    cout << ans << "\n";
+    int ans2 = L - cnt(xl + 1, lb);
+    ans1 += lb;
+    lb = 0, rb = 2e9 + 5;
+    while (lb < rb - 1) {
+        int m = (lb + rb) >> 1;
+        // 幾輪
+        if (R - cnt(xl + 2, m) < 0) {
+            rb = m;
+        }
+        else { // L - cnt >= 0
+            lb = m;
+        }
+    }
+    int ans3 = R - cnt(xl + 2, lb);
+    ans1 += lb;
+    if(!flg) cout << ans1 << " " << ans2 << " " << ans3 << "\n";
+    else cout << ans1 << " " << ans3 << " " << ans2 << "\n";
+}
+
+signed main () {
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
 }
