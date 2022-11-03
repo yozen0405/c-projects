@@ -1,70 +1,53 @@
 #include <bits/stdc++.h>
-#define int long long
-#define pb push_back
-#define mk make_pair
-#define pii pair<int, int>
 using namespace std;
 
-int L, R, n;
-
-int cnt (int start, int num) {
-    return (start + start + 2 * (num - 1)) * num / 2;
-}
-
-void solve() {  
-    cin >> L >> R;
-    bool flg = 0;
-    if (R > L) {
-        flg = 1;
-        swap(L, R);
-    } 
-    int xl = 0, xr = 2e9 + 5;
-    while (xl < xr - 1) { // L >= R
-        int m = (xl + xr) >> 1;
-        if (L - m * (m + 1) / 2 < R) {
-            xr = m;
-        }
-        else {
-            xl = m;
+int main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int N, M, K; cin >> N >> M >> K;
+    string S, T; cin >> S >> T, T = "?" + T, ++M;
+    
+    vector<vector<int>> pre(N+1, vector<int>(26, -1));
+    for (int i = 1; i <= N; ++i) {
+        pre[i] = pre[i-1];
+        pre[i][S[i-1] - 'a'] = i-1;
+    }
+    
+    vector<vector<int>> nxt(M+1, vector<int>(26, M));
+    for (int i = M-2; i >= 0; --i) {
+        nxt[i] = nxt[i+1];
+        nxt[i][T[i+1] - 'a'] = i+1;
+    }
+    
+    vector<vector<int>> dp(N+1, vector<int>(K+1, M));
+    dp[0][0] = 0, dp[0][1] = nxt[0][S[0] - 'a'];
+    for (int i = 1; i < N; ++i) {
+        dp[i][0] = 0;
+        for (int j = 1; j <= K; ++j) {
+            dp[i][j] = min(
+                dp[i-1][j],
+                nxt[dp[i-1][j-1]][S[i] - 'a']
+            );
         }
     }
-    int ans1 = xl;
-    L -= xl * (xl + 1) / 2;
-    int lb = 0, rb = 2e9 + 5;
-    if (L == R) flg = 0;
-    while (lb < rb - 1) {
-        int m = (lb + rb) >> 1;
-        // 幾輪
-        if (L - cnt(xl + 1, m) < 0) {
-            rb = m;
+    
+    for (int len = K; len >= 1; --len) {
+        if (dp[N-1][len] == M) continue;
+        
+        int pos_t = dp[N-1][len], pos_s = pre[N][T[pos_t] - 'a'];
+        string ans(len, '?');
+        
+        ans[len-1] = S[pos_s];
+        for (int i = len-1; i >= 1; --i) {
+            pos_t = dp[pos_s-1][i];
+            pos_s = pre[pos_s][T[pos_t] - 'a'];
+            ans[i-1] = S[pos_s];
         }
-        else { // L - cnt >= 0
-            lb = m;
-        }
+        
+        cout << len << "\n" << ans << "\n";
+        return 0;
     }
-    int ans2 = L - cnt(xl + 1, lb);
-    ans1 += lb;
-    lb = 0, rb = 2e9 + 5;
-    while (lb < rb - 1) {
-        int m = (lb + rb) >> 1;
-        // 幾輪
-        if (R - cnt(xl + 2, m) < 0) {
-            rb = m;
-        }
-        else { // L - cnt >= 0
-            lb = m;
-        }
-    }
-    int ans3 = R - cnt(xl + 2, lb);
-    ans1 += lb;
-    if(!flg) cout << ans1 << " " << ans2 << " " << ans3 << "\n";
-    else cout << ans1 << " " << ans3 << " " << ans2 << "\n";
-}
-
-signed main () {
-    int t;
-    cin >> t;
-    while (t--) {
-        solve();
-    }
+    cout << 0 << "\n" << "\n";
+    
+    return 0;
 }
