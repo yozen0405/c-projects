@@ -1,53 +1,71 @@
-#include <bits/stdc++.h>
+// Solver: Min-Zheng Shieh
+// Expected running time: <1 second
+
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+
 using namespace std;
 
-int main() {
-    ios_base::sync_with_stdio(0), cin.tie(0);
-    
-    int N, M, K; cin >> N >> M >> K;
-    string S, T; cin >> S >> T, T = "?" + T, ++M;
-    
-    vector<vector<int>> pre(N+1, vector<int>(26, -1));
-    for (int i = 1; i <= N; ++i) {
-        pre[i] = pre[i-1];
-        pre[i][S[i-1] - 'a'] = i-1;
-    }
-    
-    vector<vector<int>> nxt(M+1, vector<int>(26, M));
-    for (int i = M-2; i >= 0; --i) {
-        nxt[i] = nxt[i+1];
-        nxt[i][T[i+1] - 'a'] = i+1;
-    }
-    
-    vector<vector<int>> dp(N+1, vector<int>(K+1, M));
-    dp[0][0] = 0, dp[0][1] = nxt[0][S[0] - 'a'];
-    for (int i = 1; i < N; ++i) {
-        dp[i][0] = 0;
-        for (int j = 1; j <= K; ++j) {
-            dp[i][j] = min(
-                dp[i-1][j],
-                nxt[dp[i-1][j-1]][S[i] - 'a']
-            );
-        }
-    }
-    
-    for (int len = K; len >= 1; --len) {
-        if (dp[N-1][len] == M) continue;
-        
-        int pos_t = dp[N-1][len], pos_s = pre[N][T[pos_t] - 'a'];
-        string ans(len, '?');
-        
-        ans[len-1] = S[pos_s];
-        for (int i = len-1; i >= 1; --i) {
-            pos_t = dp[pos_s-1][i];
-            pos_s = pre[pos_s][T[pos_t] - 'a'];
-            ans[i-1] = S[pos_s];
-        }
-        
-        cout << len << "\n" << ans << "\n";
-        return 0;
-    }
-    cout << 0 << "\n" << "\n";
-    
-    return 0;
+void solve()
+{
+	int N, B, R, ans=0;
+	scanf("%d",&N);
+	vector<int> p(N+1),d(N+1),c(N+1);
+	for(int i=1; i<=N; i++)
+		scanf("%d%d%d",&p[i],&d[i],&c[i]);
+	scanf("%d%d",&B,&R);
+	vector<vector<int>> dp(N+2,vector<int>(R+1));
+
+	// build prefix sums
+	// c[0]=p[0]=0; // done by vector
+	for(int i=1; i<=N; i++)
+	{
+		c[i]+=c[i-1];
+		p[i]+=p[i-1];
+	}
+
+	vector<int> start(N+1), ret(N+1);
+	for(int i=1; i<=N; i++)
+	{
+		//ret[i]=0; // initialization is done by vector
+		for(int j=i; j<=N; j++)
+		{
+			if(d[i]+d[j]+c[j-1]-c[i-1]<=B)
+				ret[i]=j;
+		}
+	}
+	for(int i=1; i<=N; i++)
+	{
+		int length=d[i];
+		start[i]=i;
+		for(int j=1; j<i; j++)
+			if(length>d[j]+c[i-1]-c[j-1])
+			{
+				length=d[j]+c[i-1]-c[j-1];
+				start[i]=j;
+			}
+	}
+// initialization is done by vector
+//	for(int i=0; i<=n; i++) dp[0][i]=0;
+//	for(int i=0; i<=r; i++) dp[i][n+1]=0;
+	for(int i=N; i>0; i--)
+	{
+		for(int j=1; j<=R; j++)
+		{
+			if(ret[start[i]]==0) dp[i][j]=dp[i+1][j];
+			else dp[i][j]=max(dp[i+1][j],
+				dp[ret[start[i]]+1][j-1]+p[ret[start[i]]]-p[i-1]);
+			ans=max(ans,dp[i][j]);
+		}
+	}
+	printf("%d\n",ans);
+}
+
+int main()
+{
+	int nCases;
+	scanf("%d",&nCases);
+	while(nCases--) solve();
+	return 0;
 }
