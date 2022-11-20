@@ -1,0 +1,216 @@
+# CSES 1162
+
+## 題意
+
+- 給你以下 $4$ 種 $\texttt{sorting}$ 方法，問對於單獨使用每一種，該種可以讓陣列從小到大 $\texttt{sort}$ 的最小操作次數
+
+  - $\texttt{swap}\mathtt{(a_i,a_j)}$ 其中 $\mathtt{i=j-1}$  ，也就是 $\texttt{swap}$ 相鄰的兩個元素
+
+  - $\texttt{swap}\mathtt{(a_i,a_j)}$ 其中 $\mathtt{i<j}$  ，也就是 $\texttt{swap}$ 任意兩個元素
+
+  - 刪掉一個元素(空出來的會被後面補滿)，再把它插入到另外的位置
+
+  - 刪掉一個元素(空出來的會被後面補滿)，再把它插入到陣列的第 $1$ 項
+
+## 想法
+
+### sort1
+
+- $\texttt{ans = }$逆序數對
+
+### sort2
+
+- 最少 $n-1$ 次 $\texttt{sort}$ 完
+- 我們最後的目標是想要把 $a_i$ 換到 $i$ 這個位置上
+  - 把一個交換想成一個邊
+  - 把 $a_i$ 跟 $i$ 連上一條邊
+  - 代表他需要經歷過一些邊才能被換到 $i$ 這個位置
+- 邊所形成的環代表可以將他們所需要交換的次數 $-1$ 
+  - 因為最後會將兩個 $(a_i,a_j)$ 分別在 $(j,i)$ 換到 $(i,j)$
+  - 一次交換換好兩個
+- $\mathtt{ans=n-num(cycle)}$
+
+### sort 3
+
+- 想成刪掉一個元素
+  - 因為刪掉的那個元素可以直接過去他要的位置 ($a_i\rightarrow i$)
+- 代表不需要刪掉的是他們順序已經是排好的(遞增)
+
+- $\mathtt{ans=n-LIS}$ 
+
+### sort4
+
+- 觀察
+  - 如果 $x$ 動, 那小於 $x$ 的數字全部都要動
+    - 因為 $x$ 已經到最前面了
+    - 後面比她小的數字都需一到他前面才可以
+    - 連鎖反應 $x$ 影響到 $x-1,x-1$ 影響到 $x-2..$
+- 從 $n$ 找下來看他們的順序是否從 $n$ 往左看過去遞減
+
+- $\mathtt{ans=n-len}$ 
+
+## code
+
+```cpp
+#include <bits/stdc++.h>
+#define int long long
+#define pii pair<int, int>
+#define pb push_back
+#define mk make_pair
+#define F first
+#define S second
+#define ALL(x) x.begin(), x.end()
+#define lowbit(x) (x & (-x))
+
+using namespace std;
+using PQ = priority_queue<int, vector<int>, greater<int>>;
+ 
+const int INF = 2e18;
+const int maxn = 3e5 + 5;
+const int M = 1e9 + 7;
+
+int n;
+int a[maxn];
+int vis[maxn];
+vector<int> G[maxn];
+
+int ifloor(int a, int b){
+    if(b < 0) a *= -1, b *= -1;
+    if(a < 0) return (a - b + 1) / b;
+    else return a / b;
+}
+ 
+int iceil(int a, int b){
+    if(b < 0) a *= -1, b *= -1;
+    if(a > 0) return (a + b - 1) / b;
+    else return a / b;
+}
+
+struct BIT {
+    int n;
+    vector<int> bit;
+
+    void build (int _n) {
+        n = _n;
+        bit.resize (n + 1);
+    }
+
+    int query (int x) {
+        int ret = 0;
+        while (x > 0) {
+            ret += bit[x];
+            x -= lowbit (x);
+        }
+
+        return ret;
+    }
+
+    void modify (int x, int d) {
+        while (x <= n) {
+            bit[x] += d;
+            x += lowbit (x);
+        }
+    }
+}; 
+
+void init() {
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+}
+
+void sort1 () {
+    BIT bit;
+    bit.build (n);
+
+    int res = 0;
+    vector<int> pos (n + 1);
+    for (int i = 1; i <= n; i++) {
+        pos[a[i]] = i;
+    }
+    for (int i = n; i >= 1; i--) {
+        int idx = pos[i];
+        res += bit.query (idx);
+        bit.modify (idx, 1);
+    }
+
+    cout << res << "\n";
+}
+
+void dfs (int u) {
+    vis[u] = 1;
+    for (auto v : G[u]) {
+        if (vis[v]) continue;
+        dfs (v);
+    }
+}
+
+void sort2 () {
+    int res = 0;
+    vector<int> pos (n + 1);
+    for (int i = 1; i <= n; i++) {
+        pos[a[i]] = i;
+    }
+    for (int i = 1; i <= n; i++) {
+        G[pos[i]].pb(i);
+    }
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) dfs (i), res++;
+    }
+
+    cout << n - res << "\n";
+}
+
+void sort3 () {
+    vector<int> lis;
+    int mx = 0;
+    for (int i = 1; i <= n; i++) {
+        if (lis.empty() || lis.back() < a[i]) {
+            lis.pb(a[i]);
+            mx = max (mx, (int) lis.size());
+        } 
+        else {
+            auto pos = lower_bound (ALL(lis), a[i]);
+            *pos = a[i];
+            int p = pos - lis.begin() + 1;
+            mx = max (mx, p);
+        }
+    }
+
+    cout << n - mx << "\n";
+}
+
+void sort4 () {
+    // 如果 x 動, 那小於 x 的數字全部都要動
+    vector<int> pos (n + 1);
+    for (int i = 1; i <= n; i++) {
+        pos[a[i]] = i;
+    }
+
+    int pre = pos[n], res = 1;
+    for (int i = n - 1; i >= 1; i--) {
+        if (pos[i] <= pre) pre = pos[i], res++;
+        else break;
+    }
+
+    cout << n - res << "\n";
+}
+
+void solve() {
+    sort1();
+    sort2();
+    sort3();
+    sort4();
+} 
+ 
+signed main() {
+    // ios::sync_with_stdio(0);
+    // cin.tie(0);
+    int t = 1;
+    //cin >> t;
+    while (t--) {
+        init();
+        solve();
+    }
+} 
+```
+
