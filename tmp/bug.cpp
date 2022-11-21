@@ -1,71 +1,86 @@
-// Solver: Min-Zheng Shieh
-// Expected running time: <1 second
-
-#include<cstdio>
-#include<vector>
-#include<algorithm>
+#include <algorithm>
+#include <iostream>
+#include <queue>
+#include <utility>
+#include <vector>
 
 using namespace std;
 
-void solve()
-{
-	int N, B, R, ans=0;
-	scanf("%d",&N);
-	vector<int> p(N+1),d(N+1),c(N+1);
-	for(int i=1; i<=N; i++)
-		scanf("%d%d%d",&p[i],&d[i],&c[i]);
-	scanf("%d%d",&B,&R);
-	vector<vector<int>> dp(N+2,vector<int>(R+1));
+#define int long long
+#define x first
+#define y second
+using pii = pair<int, int>;
 
-	// build prefix sums
-	// c[0]=p[0]=0; // done by vector
-	for(int i=1; i<=N; i++)
-	{
-		c[i]+=c[i-1];
-		p[i]+=p[i-1];
-	}
+int n, A, B, C;
+vector<pii> v;
+int suma = 0;
 
-	vector<int> start(N+1), ret(N+1);
-	for(int i=1; i<=N; i++)
-	{
-		//ret[i]=0; // initialization is done by vector
-		for(int j=i; j<=N; j++)
-		{
-			if(d[i]+d[j]+c[j-1]-c[i-1]<=B)
-				ret[i]=j;
-		}
-	}
-	for(int i=1; i<=N; i++)
-	{
-		int length=d[i];
-		start[i]=i;
-		for(int j=1; j<i; j++)
-			if(length>d[j]+c[i-1]-c[j-1])
-			{
-				length=d[j]+c[i-1]-c[j-1];
-				start[i]=j;
-			}
-	}
-// initialization is done by vector
-//	for(int i=0; i<=n; i++) dp[0][i]=0;
-//	for(int i=0; i<=r; i++) dp[i][n+1]=0;
-	for(int i=N; i>0; i--)
-	{
-		for(int j=1; j<=R; j++)
-		{
-			if(ret[start[i]]==0) dp[i][j]=dp[i+1][j];
-			else dp[i][j]=max(dp[i+1][j],
-				dp[ret[start[i]]+1][j-1]+p[ret[start[i]]]-p[i-1]);
-			ans=max(ans,dp[i][j]);
-		}
-	}
-	printf("%d\n",ans);
+void init() {
+    cin >> n >> A >> B >> C;
+
+    v.resize(n + 1);
+    for (int i = 1; i <= n; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        suma += a;      // 假設都全部先選 a[i]
+        int x = b - a;  // 改拿 b[i] 可以增加的量
+        int y = c - a;  // 改拿 c[i] 可以增加的量
+        v[i] = {x, y};
+    }
 }
 
-int main()
-{
-	int nCases;
-	scanf("%d",&nCases);
-	while(nCases--) solve();
-	return 0;
+int solve() {
+    sort(v.rbegin(), v.rend() - 1);  // 按照 x 大到小
+                                     //
+    vector<int> pre(n + 1);  // pre[i] : v[1~i] 要選出 B 個 x, (i-B) 個 y
+    vector<int> suf(n + 1);  // suf[i] : v[i~n] 要選出 B + C - (i-1) 個 y
+
+    // build pre[i]
+    priority_queue<int> pq;
+    int sum = 0;
+    for (int i = 1; i <= B; i++) {
+        pq.push(v[i].y - v[i].x);
+        sum += v[i].x;
+        pre[i] = sum;
+    }
+    for (int i = B + 1; i <= B + C; i++) {
+        pq.push(v[i].y - v[i].x);
+        sum += v[i].x;
+        sum += pq.top();
+        pq.pop();
+        pre[i] = sum;
+    }
+
+    pq = priority_queue<int>();
+    sum = 0;
+
+    // build suf[i]
+    for (int i = n; i > B + C; i--) {
+        pq.push(v[i].y);
+    }
+    for (int i = B + C; i > B; i--) {
+        pq.push(v[i].y);
+        sum += pq.top();
+        pq.pop();
+        suf[i] = sum;
+    }
+
+    // merge pre[] and suf[]
+    // pre[i] + suf[i+1] 表示左半全部都要選(當x或當y)，不夠的東西在右邊(suf)選
+    int ans = 0;
+    for (int i = B; i <= B + C; i++) {
+        ans = max(ans, suma + pre[i] + suf[i + 1]);
+    }
+    return ans;
+}
+
+signed main() {
+    cin.tie(0);
+    cin.sync_with_stdio(0);
+
+    init();
+    int ans = solve();
+    cout << ans << '\n';
+
+    return 0;
 }
