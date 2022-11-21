@@ -1,3 +1,4 @@
+```cpp
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -84,3 +85,4 @@ signed main() {
 
     return 0;
 }
+```
