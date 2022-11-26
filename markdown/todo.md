@@ -1,7 +1,7 @@
 - [x] [Pyramid array](https://cses.fi/problemset/task/1747)
 - [ ] [Maximum Xor Subarray](https://cses.fi/problemset/task/1655)
 - [x] [Area of Rectangles](https://cses.fi/problemset/task/1741)
-- [ ] [Subarray Squares](https://cses.fi/problemset/task/2086)
+- [x] [Subarray Squares](https://cses.fi/problemset/task/2086)
 - [ ] [Candy Lottery](https://cses.fi/problemset/task/1727)
 - [ ] [Stick Game](https://cses.fi/problemset/task/1729)
 - [ ] [Binomial Coefficients](https://cses.fi/problemset/task/1079)
