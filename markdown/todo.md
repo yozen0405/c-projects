@@ -3,7 +3,7 @@
 - [x] [Area of Rectangles](https://cses.fi/problemset/task/1741)
 - [x] [Subarray Squares](https://cses.fi/problemset/task/2086)
 - [ ] [Candy Lottery](https://cses.fi/problemset/task/1727)
-- [ ] [Stick Game](https://cses.fi/problemset/task/1729)
+- [x] [Stick Game](https://cses.fi/problemset/task/1729)
 - [ ] [Binomial Coefficients](https://cses.fi/problemset/task/1079)
 - [ ] [Grid Puzzle I](https://cses.fi/problemset/task/2432)
 - [ ] [Grid Puzzle II](https://cses.fi/problemset/task/2131)
