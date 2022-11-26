@@ -1,6 +1,6 @@
 - [ ] [Pyramid array](https://cses.fi/problemset/task/1747)
 - [ ] [Maximum Xor Subarray](https://cses.fi/problemset/task/1655)
-- [ ] [Area of Rectangles](https://cses.fi/problemset/task/1741)
+- [x] [Area of Rectangles](https://cses.fi/problemset/task/1741)
 - [ ] [Subarray Squares](https://cses.fi/problemset/task/2086)
 - [ ] [Grundy's Game](https://cses.fi/problemset/task/2207)
 - [ ] [Candy Lottery](https://cses.fi/problemset/task/1727)
