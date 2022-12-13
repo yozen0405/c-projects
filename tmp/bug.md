@@ -1,88 +1,102 @@
 ```cpp
-#include <algorithm>
-#include <iostream>
-#include <queue>
-#include <utility>
-#include <vector>
+#include <bits/stdc++.h>
+#define int long long
+#define pii pair<int, int>
+#define pb push_back
+#define mk make_pair
+#define F first
+#define S second
+#define ALL(x) x.begin(), x.end()
 
 using namespace std;
+using PQ = priority_queue<int, vector<int>, greater<int>>;
+ 
+const int INF = 2e18;
+const int maxn = 1e4 + 5;
+const int maxm = 27;
+const int M = 1e9 + 7;
 
-#define int long long
-#define x first
-#define y second
-using pii = pair<int, int>;
+int n;
+string s;
+int dp[maxn][maxm];
+int dis[maxm][maxm];
+vector<int> G[maxn];
+vector<vector<char>> A = {{'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'},
+                          {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'},
+                          {'Z', 'X', 'C', 'V', 'B', 'N', 'M'}};
 
-int n, A, B, C;
-vector<pii> v;
-int suma = 0;
-
-void init() {
-    cin >> n >> A >> B >> C;
-
-    v.resize(n + 1);
-    for (int i = 1; i <= n; i++) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        suma += a;      // 假設都全部先選 a[i]
-        int x = b - a;  // 改拿 b[i] 可以增加的量
-        int y = c - a;  // 改拿 c[i] 可以增加的量
-        v[i] = {x, y};
-    }
-}
-
-int solve() {
-    sort(v.rbegin(), v.rend() - 1);  // 按照 x 大到小
-                                     //
-    vector<int> pre(n + 1);  // pre[i] : v[1~i] 要選出 B 個 x, (i-B) 個 y
-    vector<int> suf(n + 1);  // suf[i] : v[i~n] 要選出 B + C - (i-1) 個 y
-
-    // build pre[i]
-    priority_queue<int> pq;
-    int sum = 0;
-    for (int i = 1; i <= B; i++) {
-        pq.push(v[i].y - v[i].x);
-        sum += v[i].x;
-        pre[i] = sum;
-    }
-    for (int i = B + 1; i <= B + C; i++) {
-        pq.push(v[i].y - v[i].x);
-        sum += v[i].x;
-        sum += pq.top();
-        pq.pop();
-        pre[i] = sum;
-    }
-
-    pq = priority_queue<int>();
-    sum = 0;
-
-    // build suf[i]
-    for (int i = n; i > B + C; i--) {
-        pq.push(v[i].y);
-    }
-    for (int i = B + C; i > B; i--) {
-        pq.push(v[i].y);
-        sum += pq.top();
-        pq.pop();
-        suf[i] = sum;
-    }
-
-    // merge pre[] and suf[]
-    // pre[i] + suf[i+1] 表示左半全部都要選(當x或當y)，不夠的東西在右邊(suf)選
-    int ans = 0;
-    for (int i = B; i <= B + C; i++) {
-        ans = max(ans, suma + pre[i] + suf[i + 1]);
-    }
-    return ans;
-}
-
-signed main() {
-    cin.tie(0);
-    cin.sync_with_stdio(0);
-
-    init();
-    int ans = solve();
-    cout << ans << '\n';
-
+int check (int i, int row) {
+    if (0 > row || row >= 3) return 0;
+    if (0 <= i && i < A[row].size()) return 1;
     return 0;
+}
+
+void add_edge (int i, int row1, int j, int row2) {
+    cout << "i:" << i << ",row1:" << row1 << ",j:" << j << ",row2:" << row2 << "\n";
+    if (check (i, row1) == 0 || check (j, row2) == 0) return;
+    cout << "fk\n";
+    dis[A[row1][i] - 'a' + 1][A[row2][j] - 'a' + 1] = 1;
+    dis[A[row2][j] - 'a' + 1][A[row1][i] - 'a' + 1] = 1;
+    cout << "y\n";
+}
+
+void build () {
+    cout << "hi\n";
+    for (int i = 1; i <= 26; i++) {
+            for (int j = 1; j <= 26; j++) {
+                dis[i][j] = INF;
+            }
+    }
+    int row = -1;
+    for (auto vec : A) {
+        row++;
+        int i = 0;
+        for (auto ele : vec) {
+            add_edge (i, row, i - 1, row + 1);
+            cout << "yes\n";
+            add_edge (i, row, i, row + 1);
+            cout << "yes\n";
+            add_edge (i, row, i, row - 1);
+            cout << "yes\n";
+            add_edge (i, row, i + 1, row - 1);
+            cout << "yes\n";
+            add_edge (i, row, i + 1, row);
+            cout << "yes\n";
+            add_edge (i, row, i - 1, row);
+            cout << "yes\n";
+            i++;
+            cout << ele << "\n";
+        }
+    }
+
+    cout << "di\n";
+    for (int k = 1; k <= 26; k++) {
+        for (int i = 1; i <= 26; i++) {
+            for (int j = 1; j <= 26; j++) {
+                if (dis[i][k] + dis[k][j] < dis[i][j]) {
+                    dis[i][j] = dis[i][k] + dis[k][j];
+                }
+            }
+        }
+    }
+}
+
+void init () {
+    //cin >> n >> s;
+}
+
+void solve () {
+    build ();
+} 
+ 
+signed main() {
+    // ios::sync_with_stdio(0);
+    // cin.tie(0);
+    int t = 1;
+    //cin >> t;
+    while (t--) {
+        init();
+        solve();
+    }
 }
 ```
