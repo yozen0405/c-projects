@@ -32,16 +32,12 @@ int check (int i, int row) {
 }
 
 void add_edge (int i, int row1, int j, int row2) {
-    cout << "i:" << i << ",row1:" << row1 << ",j:" << j << ",row2:" << row2 << "\n";
     if (check (i, row1) == 0 || check (j, row2) == 0) return;
-    cout << "fk\n";
     dis[A[row1][i] - 'a' + 1][A[row2][j] - 'a' + 1] = 1;
     dis[A[row2][j] - 'a' + 1][A[row1][i] - 'a' + 1] = 1;
-    cout << "y\n";
 }
 
 void build () {
-    cout << "hi\n";
     for (int i = 1; i <= 26; i++) {
             for (int j = 1; j <= 26; j++) {
                 dis[i][j] = INF;
@@ -53,23 +49,15 @@ void build () {
         int i = 0;
         for (auto ele : vec) {
             add_edge (i, row, i - 1, row + 1);
-            cout << "yes\n";
             add_edge (i, row, i, row + 1);
-            cout << "yes\n";
             add_edge (i, row, i, row - 1);
-            cout << "yes\n";
             add_edge (i, row, i + 1, row - 1);
-            cout << "yes\n";
             add_edge (i, row, i + 1, row);
-            cout << "yes\n";
             add_edge (i, row, i - 1, row);
-            cout << "yes\n";
             i++;
-            cout << ele << "\n";
         }
     }
 
-    cout << "di\n";
     for (int k = 1; k <= 26; k++) {
         for (int i = 1; i <= 26; i++) {
             for (int j = 1; j <= 26; j++) {
