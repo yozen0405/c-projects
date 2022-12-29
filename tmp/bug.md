@@ -1,4 +1,4 @@
-```cpp
+```cpp=
 #include <bits/stdc++.h>
 #define int long long
 #define pii pair<int, int>
@@ -7,84 +7,74 @@
 #define F first
 #define S second
 #define ALL(x) x.begin(), x.end()
-
+ 
 using namespace std;
 using PQ = priority_queue<int, vector<int>, greater<int>>;
  
 const int INF = 2e18;
-const int maxn = 1e4 + 5;
-const int maxm = 27;
+const int maxn = 3e5 + 5;
 const int M = 1e9 + 7;
+const int K = 60;
 
-int n;
-string s;
-int dp[maxn][maxm];
-int dis[maxm][maxm];
-vector<int> G[maxn];
-vector<vector<char>> A = {{'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'},
-                          {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'},
-                          {'Z', 'X', 'C', 'V', 'B', 'N', 'M'}};
-
-int check (int i, int row) {
-    if (0 > row || row >= 3) return 0;
-    if (0 <= i && i < A[row].size()) return 1;
-    return 0;
-}
-
-void add_edge (int i, int row1, int j, int row2) {
-    if (check (i, row1) == 0 || check (j, row2) == 0) return;
-    dis[A[row1][i] - 'a' + 1][A[row2][j] - 'a' + 1] = 1;
-    dis[A[row2][j] - 'a' + 1][A[row1][i] - 'a' + 1] = 1;
-}
-
-void build () {
-    for (int i = 1; i <= 26; i++) {
-            for (int j = 1; j <= 26; j++) {
-                dis[i][j] = INF;
-            }
-    }
-    int row = -1;
-    for (auto vec : A) {
-        row++;
-        int i = 0;
-        for (auto ele : vec) {
-            add_edge (i, row, i - 1, row + 1);
-            add_edge (i, row, i, row + 1);
-            add_edge (i, row, i, row - 1);
-            add_edge (i, row, i + 1, row - 1);
-            add_edge (i, row, i + 1, row);
-            add_edge (i, row, i - 1, row);
-            i++;
-        }
-    }
-
-    for (int k = 1; k <= 26; k++) {
-        for (int i = 1; i <= 26; i++) {
-            for (int j = 1; j <= 26; j++) {
-                if (dis[i][k] + dis[k][j] < dis[i][j]) {
-                    dis[i][j] = dis[i][k] + dis[k][j];
-                }
-            }
-        }
-    }
-}
+int n, tar;
+vector<int> a;
 
 void init () {
-    //cin >> n >> s;
+    cin >> n >> tar;
+    a.clear ();
+    a.resize (n);
+    for (int i = 0; i < n; i++) cin >> a[i];
 }
 
 void solve () {
-    build ();
+    vector<int> v(K, -1);
+    int j = 0;
+    for (int x : a) {
+        j++;
+        for (int i = 0; i < K; i++) {
+            if (v[i] != -1 && (x & (1LL << i))) {
+                //cout << "idx:" << j << ",i:" << i << "\n";
+                x ^= v[i];
+            }
+        }
+        if (x == 0) continue;
+        int p = K;
+        while ((x & (1LL << p)) == 0) p--;
+        //cout << "p:" << p << ",x:" << x << "\n";
+        v[p] = x;
+        for (int i = 0; i < K; i++) {
+            if (i == p) continue;
+            if (v[i] == -1) continue;
+
+            if (v[i] & (1 << p)) v[i] ^= v[p];
+        }
+    }
+
+    int x = tar;
+    for (int i = K - 1; i >= 0; i--) {
+        if (v[i] != -1 && (x & (1LL << i)) == 0) {
+            //cout << "i:" << i << "\n";
+            x ^= v[i];
+        }
+    }
+
+    cout << x << "\n";
 } 
+
+/*
+1
+3 5
+1 7 9
+*/
  
 signed main() {
     // ios::sync_with_stdio(0);
     // cin.tie(0);
     int t = 1;
-    //cin >> t;
+    cin >> t;
     while (t--) {
-        init();
+        init ();
         solve();
     }
-}
+}  
 ```
