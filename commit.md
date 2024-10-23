@@ -5,7 +5,8 @@ This pull request aims to improve the overall readability of the project by enha
 ### Changes
 
 <details>
-  <summary>**local variables**</summary>
+  <summary>local variables</summary>
+  
 - l, a → removed: The intermediate variables l and a were removed, and the data is now directly appended to all_news_data using extend, simplifying the logic.
 - p → page: Renamed in pagination logic to clarify that it refers to the page number.
 - p2 → request_params: Renamed p2 to request_params for clearer understanding of the variable’s purpose, improving code readability.
@@ -24,7 +25,7 @@ This pull request aims to improve the overall readability of the project by enha
 
 
 <details>
-  <summary>**global variables**</summary>
+  <summary>global variables</summary>
 
 
 - Replaced hard-coded magic numbers like 50, 200 with clearly defined constants (MaxUsernameSize, MaxPasswordSize) for better maintainability.
@@ -32,7 +33,8 @@ This pull request aims to improve the overall readability of the project by enha
 
 </details>
 
-
+<details>
+  <summary>params</summary>
 
 - u → user: Used in the functions where user information is being passed, such as in read_user_news, upvote_article, news_summary.
 - id → article_id: Updated to indicate that the variable holds the ID of a news article, used in query parameters for links.
@@ -44,7 +46,7 @@ This pull request aims to improve the overall readability of the project by enha
 
 
 <details>
-  <summary>**functions**</summary>
+  <summary>functions</summary>
 
 
 - get_new_info → fetch_news_articles_by_keyword: Changed to clarify that the function fetches news articles based on a search term.
